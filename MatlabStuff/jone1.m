@@ -8,14 +8,14 @@ close all
 % p-pol transmittance 95.54% @ 532nm
 % s-pol transmittance 0.04348% @ 532nm
 % total R_s > 99.50% 
-cubeP_trans = 0.9554;
+cubeP_trans = 1; % 0.9554
 cubeS_trans = 0.0004348; %this not needed as the max difference in power is 3.83e-4 mW
 
 % half wave plate errors and specs
 % reflectance 0.25% @ 532nm
 % transmittamnce 98.04996% @ 532nm
 
-halfWave_trans = 0.9804996; % incldue as mean sqr err between original and transmitted Ey = 0.8482 
+halfWave_trans = 0.8; %0.8804996, incldue as mean sqr err between original and transmitted Ey = 0.8482 
 
 % laser spec and error
 % 0.8mW < power < 1mW, typical @ 0.9mW
@@ -44,7 +44,7 @@ thetaAxis =[0:1:360];     % adjust division accodring to servo motor
 
 for i=1:size(thetaAxis,2)
     
-solT =  subs (TotalTrans, {theta, Ey,Ez} ,{thetaAxis(i),132.742,0});
+solT =  subs (TotalTrans, {theta, Ey,Ez} ,{thetaAxis(i),1500,0});
 
 outEy(i) = double(solT(1));  
 outEz(i) = double(solT(2));  
@@ -98,7 +98,7 @@ TotalRef = JonesPolRef * JonesHalfRot * initial;
 
 for i=1:size(thetaAxis,2)
     
-solT =  subs (TotalRef, {theta, Ey,Ez} ,{thetaAxis(i),132.742,0});
+solT =  subs (TotalRef, {theta, Ey,Ez} ,{thetaAxis(i),1500,0});
 
 outRefEy(i) = double(solT(1));
 outRefEz(i) = double(solT(2));
@@ -129,7 +129,7 @@ between = JonesHalfRot * initial;
 
 for i=1:size(thetaAxis,2)
     
-solBet =  subs (between, {theta, Ey,Ez} ,{thetaAxis(i),132.742,0});
+solBet =  subs (between, {theta, Ey,Ez} ,{thetaAxis(i),1500,0});
 
 BetEy(i) = double(solBet(1));
 BetEz(i) = double(solBet(2));

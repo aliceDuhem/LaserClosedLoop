@@ -44,7 +44,7 @@ thetaAxis =[0:1:360];     % adjust division accodring to servo motor
 
 for i=1:size(thetaAxis,2)
     
-solT =  subs (TotalTrans, {theta, Ey,Ez} ,{thetaAxis(i),1500,0});
+solT =  subs (TotalTrans, {theta, Ey,Ez} ,{thetaAxis(i),132.7,0});
 
 outEy(i) = double(solT(1));  
 outEz(i) = double(solT(2));  
@@ -98,7 +98,7 @@ TotalRef = JonesPolRef * JonesHalfRot * initial;
 
 for i=1:size(thetaAxis,2)
     
-solT =  subs (TotalRef, {theta, Ey,Ez} ,{thetaAxis(i),1500,0});
+solT =  subs (TotalRef, {theta, Ey,Ez} ,{thetaAxis(i),132.7,0});
 
 outRefEy(i) = double(solT(1));
 outRefEz(i) = double(solT(2));
@@ -129,7 +129,7 @@ between = JonesHalfRot * initial;
 
 for i=1:size(thetaAxis,2)
     
-solBet =  subs (between, {theta, Ey,Ez} ,{thetaAxis(i),1500,0});
+solBet =  subs (between, {theta, Ey,Ez} ,{thetaAxis(i),132.7,0});
 
 BetEy(i) = double(solBet(1));
 BetEz(i) = double(solBet(2));

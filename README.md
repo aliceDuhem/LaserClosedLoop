@@ -21,7 +21,7 @@ Make sure you have Git installed on your computer - [https://git-scm.com/downloa
 6. You should now have the repository checked out locally.
 7. Using the IDE (e.g. IntelliJ/Eclipse) of your choice, open up your local repository and make changes to the answer files.
  
-**How to commit and push your changes to GitHub for it to be evaluated:**
+**How to commit and push your changes to GitHub (Must run this each time you intend on pushing local changes to GitHub, it would not sync changes automatically):**
  
 1. Open up Command Line/Terminal and navigate to your repository by executing this command –  
 `$ cd Desktop/LaserClosedLoop/<Your Repository without the brackets>`

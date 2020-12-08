@@ -13,7 +13,7 @@ Make sure you have Git installed on your computer - [https://git-scm.com/downloa
  
 1. Create a folder on your desktop called LaserClosedLoop. Or any name you want for easy identification
 3. Open up Command Line on Windows or Terminal on Mac OS X
-4.  In Command Line/Terminal Navigate to the CodingChallenge2020 folder on your Desktop by typing in –  
+4.  In Command Line/Terminal Navigate to the LaserClosedLoop folder on your Desktop by typing in –  
  `$ cd Desktop/LaserClosedLoop`
 5. Once you’re in the folder clone your GitHub repository by executing the following command –  
  `$ git clone <insert link of your GitHub Repository here, without the brackets>`

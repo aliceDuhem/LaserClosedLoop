@@ -12,4 +12,4 @@ power_meter = ThorlabsPM100(inst=inst)
 #print(power_meter.sense.average.count) # read property
 #power_meter.sense.average.count = 10 # write property, sense avg, 1 sample ~=3ms
 #power_meter.system.beeper.immediate() # method, issues an audible signal
-actual_power = print(power_meter.read) # Read-only property
+experimental_value = print(power_meter.read) # Read-only property

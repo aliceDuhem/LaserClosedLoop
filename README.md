@@ -31,5 +31,7 @@ Make sure you have Git installed on your computer - [https://git-scm.com/downloa
 `$ git add .` (The ‘.’ represents to add everything you have changed)
 4. Commit your files to your GitHub Repository  
 `$ git commit –m “<Insert Commit Message here, without the brackets>”`
+eg:
+`$ git commit -m "Changed matlab file to include ratio"`
 5. Push your changes to the master branch -  
 `$ git push`

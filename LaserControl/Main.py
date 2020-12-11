@@ -10,7 +10,7 @@
 
 #libraries for the power meter
 import visa
-from ThorlabsPM100 import ThorlabsPM100
+from LaserControl.GetPower import PowerMeter
 #libraries for the app display
 from guizero import App,Text,TextBox, PushButton
 #-------------------------------------------------------------------------------
@@ -26,10 +26,8 @@ ACTUATION_TIME = 100
 
 #-------------------------------------------------------------------------------
 #Start by creating the power meter  using VISA
-rm = visa.ResourceManager()
-inst = rm.open_resource('USB0::0x0000::0x0000::xxxxxxxxx::INSTR',
-                        term_chars='\n', timeout=1)
-power_meter = ThorlabsPM100(inst=inst)
+power_meter = PowerMeter()
+power_meter.createInstrument()
 
 
 #-------------------------------------------------------------------------------

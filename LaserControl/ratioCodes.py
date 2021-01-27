@@ -1,14 +1,14 @@
 import math
 
-
-class ratios:
+#this class contains functions which output a ratio
+class ratio:
 
     # converts ratio (Pc/Pd) csv file to python DICTIONARY
     # ensure the range is always 0 to 360 deg
     # output dict format = {'angle' : 'ratio' }
 
 
-    def csv_to_ratio(fileName):
+    def csv_to_ratioDict(fileName):
 
         #open file
         openedRatioFile = open(fileName) 
@@ -40,7 +40,7 @@ class ratios:
     # output dict format = {'angle' : 'ratio' }
     #motor increment must be in DEG
 
-    def find_ratio(motor_increment, cube_transmittance=1, cube_reflectance=1):
+    def find_ratioDict(motor_increment, cube_transmittance=1, cube_ref_trans=1):
 
         #trig in math module works in RAD, convert motor increenet in degrees to rad
         motor_increment = math.radians(motor_increment)
@@ -54,7 +54,7 @@ class ratios:
         while i < 2* math.pi:
 
             numerator = (cube_transmittance * math.sin(4*i + math.pi/2) +1) 
-            denominator =  (cube_reflectance * math.sin(4*i -math.pi/2)+1)
+            denominator =  (cube_ref_trans * math.sin(4*i -math.pi/2)+1)
 
             #check for inf values or 0
             if ((numerator ==0) or (denominator ==0)):
@@ -71,16 +71,49 @@ class ratios:
 
 
 
-
-    #function to find instataneous Pc given angles and other variables
-
-    def Pc_from_Pd(Pd, motor_angle, cube_transmittance=1, cube_reflectance=1):
-
+    #Ratio Pc / Plaser
+    def Pc_to_Plaser(motor_angle, cube_transmittance=1, halfWave_transmittance =1):
+        
         #Convert angles to 0<angle<360
         if motor_angle>360:
             motor_angle = motor_angle%360
 
-        # 45, 135, .. deg, Pc =0, Pd = Max
+        #trig in math module works in RAD, convert motor increenet in degrees to rad
+        motor_angle = math.radians(motor_angle)
+
+        ratio = cube_transmittance * halfWave_transmittance *(math.cos(motor_angle)^2 - math.sin(motor_angle)^2)^2
+
+        return ratio
+
+
+
+
+    #ratio Pd / Plaser
+    def Pd_to_Plaser(motor_angle, cube_ref_trans=1, halfWave_transmittance =1):
+        
+        #Convert angles to 0<angle<360
+        if motor_angle>360:
+            motor_angle = motor_angle%360
+
+        #trig in math module works in RAD, convert motor increenet in degrees to rad
+        motor_angle = math.radians(motor_angle)
+
+        ratio = 4* cube_ref_trans * halfWave_transmittance * math.cos(motor_angle)^2 * math.sin(motor_angle)^2
+        
+        return ratio
+
+
+
+    #ratio Pc / Pd
+    #Analytical solution version, better than Dict I think
+    def Pc_to_Pd(motor_angle, cube_transmittance=1,cube_ref_trans=1):
+
+         #Convert angles to 0<angle<360
+        if motor_angle>360:
+            motor_angle = motor_angle%360
+
+
+         # 45, 135, .. deg, Pc =0, Pd = Max
         if (motor_angle ==45 or motor_angle == 135 or motor_angle == 225 or motor_angle == 315):
             return 0
 
@@ -93,12 +126,25 @@ class ratios:
         motor_angle = math.radians(motor_angle)
 
         numerator = (cube_transmittance * math.sin(4*motor_angle + math.pi/2) +1) 
-        denominator =  (cube_reflectance * math.sin(4*motor_angle -math.pi/2)+1)
-        Pc = Pd * numerator/denominator
+        denominator =  (cube_ref_trans * math.sin(4*motor_angle -math.pi/2)+1)
 
-        return Pc
+        ratio = numerator/denominator
+
+        return ratio
 
 
 
+
+
+#class with functions which output finished values, eg. Pc Pd
+#these functions do not output ratios
+class absolute:
+
+
+
+     #function to find instataneous Pc given angles and other variables
+    def Pc_from_Pd(Pd, motor_angle, cube_transmittance=1, cube_ref_trans=1):
+
+        return Pd * ratio.Pc_to_Pd(motor_angle, cube_transmittance,cube_ref_trans)
 
 

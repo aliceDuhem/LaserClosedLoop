@@ -15,7 +15,7 @@ cubeS_trans = 0.0004348; %this not needed as the max difference in power is 3.83
 % reflectance 0.25% @ 532nm
 % transmittamnce 98.04996% @ 532nm
 
-halfWave_trans = 0.8; %0.8804996, incldue as mean sqr err between original and transmitted Ey = 0.8482 
+halfWave_trans = 1; %0.8804996, incldue as mean sqr err between original and transmitted Ey = 0.8482 
 
 % laser spec and error
 % 0.8mW < power < 1mW, typical @ 0.9mW

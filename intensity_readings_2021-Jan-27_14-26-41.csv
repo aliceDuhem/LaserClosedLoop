@@ -1,0 +1,4 @@
+Intensity recordings for experiment starting at 2021-01-27 14:26:41.457296. readings every -9 days, 9:33:18.542704 seconds
+timestamp,intensity,error
+2021-01-27 14:26:41.457296,0.012345,0.000001
+2021-01-19 00:00:00,0.234567,0.000222

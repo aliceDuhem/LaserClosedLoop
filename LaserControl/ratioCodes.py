@@ -1,12 +1,15 @@
 import math
 
+
+
+#inputs float
 #this class contains functions which output a ratio
 class ratio:
 
     # converts ratio (Pc/Pd) csv file to python DICTIONARY
     # ensure the range is always 0 to 360 deg
-    # output dict format = {'angle' : 'ratio' }
-
+    # output dict format = {'ratio' : 'angle' }
+    # creates Dict from 0 to 45, optimisation, dict repeats
 
     def csv_to_ratioDict(fileName):
 
@@ -26,8 +29,9 @@ class ratio:
             ratioList = line.split(",")
             for element in range(len(ratioList)):
                 #add angle and ratio to dictionary
-                ratio_dict[element] = ratioList[element]
-
+                if element<45.0000001:
+                    ratio_dict[ratioList[element]] = element
+                
         return ratio_dict
 
 
@@ -37,8 +41,9 @@ class ratio:
 
     # makes Dictionary of angle and ratio based of motor increments
     # output angles would be from 0 to 360 deg
-    # output dict format = {'angle' : 'ratio' }
-    #motor increment must be in DEG
+    # output dict format = {'ratio' : 'angle' }
+    # motor increment must be in DEG
+    # DICT created only goes from 0 to 45, optimisation, repetiition
 
     def find_ratioDict(motor_increment, cube_transmittance=1, cube_ref_trans=1):
 
@@ -51,7 +56,7 @@ class ratio:
         ratio = {}
 
 
-        while i < 2* math.pi:
+        while i < 0.25* math.pi+0.000001:
 
             numerator = (cube_transmittance * math.sin(4*i + math.pi/2) +1) 
             denominator =  (cube_ref_trans * math.sin(4*i -math.pi/2)+1)
@@ -63,7 +68,7 @@ class ratio:
                 fraction = numerator / denominator
 
             #put angles and ratio into ductionary
-            ratio[math.degrees(i)]=fraction
+            ratio[fraction]=math.degrees(i)
             i = i+motor_increment
 
         
@@ -81,7 +86,7 @@ class ratio:
         #trig in math module works in RAD, convert motor increenet in degrees to rad
         motor_angle = math.radians(motor_angle)
 
-        ratio = cube_transmittance * halfWave_transmittance *(math.cos(motor_angle)^2 - math.sin(motor_angle)^2)^2
+        ratio = cube_transmittance * halfWave_transmittance *pow((pow(math.cos(motor_angle),2) - pow(math.sin(motor_angle),2)),2)
 
         return ratio
 
@@ -98,7 +103,7 @@ class ratio:
         #trig in math module works in RAD, convert motor increenet in degrees to rad
         motor_angle = math.radians(motor_angle)
 
-        ratio = 4* cube_ref_trans * halfWave_transmittance * math.cos(motor_angle)^2 * math.sin(motor_angle)^2
+        ratio = 4* cube_ref_trans * halfWave_transmittance * pow(math.cos(motor_angle),2) * pow(math.sin(motor_angle),2)
         
         return ratio
 
@@ -146,5 +151,29 @@ class absolute:
     def Pc_from_Pd(Pd, motor_angle, cube_transmittance=1, cube_ref_trans=1):
 
         return Pd * ratio.Pc_to_Pd(motor_angle, cube_transmittance,cube_ref_trans)
+
+
+
+
+    #TODO: check motor range as dict only goes up to 45 deg. 
+    #TODO: implement code so that motor works up to 360 deg, 
+    #TODO: for angle > 90, (Angle % 90 - 45) = optimised angle
+    #This code converts any angle to between 0 and 45
+    #This allows the angle to be mapped onto the optimised DICT
+    def convAngle(angle):
+        if angle > 90:
+            angle = angle % 90
+            if angle > 45:
+                angle=90-angle
+                return angle
+            return angle
+        if angle > 45:
+                angle=90-angle
+                return angle
+        return angle
+    # print(convAngle(46))
+    #TODO: Look above angle function
+
+        
 
 

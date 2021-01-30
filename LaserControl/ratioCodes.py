@@ -44,6 +44,7 @@ class ratio:
     # output dict format = {'ratio' : 'angle' }
     # motor increment must be in DEG
     # DICT created only goes from 0 to 45, optimisation, repetiition
+    #TODO: add angle 0 as inf. 
 
     def find_ratioDict(motor_increment, cube_transmittance=1, cube_ref_trans=1):
 
@@ -76,7 +77,7 @@ class ratio:
 
 
 
-    #Ratio Pc / Plaser
+    #output Ratio Pc / Plaser
     def Pc_to_Plaser(motor_angle, cube_transmittance=1, halfWave_transmittance =1):
         
         #Convert angles to 0<angle<360
@@ -93,7 +94,7 @@ class ratio:
 
 
 
-    #ratio Pd / Plaser
+    #output ratio Pd / Plaser
     def Pd_to_Plaser(motor_angle, cube_ref_trans=1, halfWave_transmittance =1):
         
         #Convert angles to 0<angle<360
@@ -109,7 +110,7 @@ class ratio:
 
 
 
-    #ratio Pc / Pd
+    #output ratio Pc / Pd
     #Analytical solution version, better than Dict I think
     def Pc_to_Pd(motor_angle, cube_transmittance=1,cube_ref_trans=1):
 
@@ -141,7 +142,7 @@ class ratio:
 
 
 
-#class with functions which output finished values, eg. Pc Pd
+#class with functions which output absolute values, eg. Pc Pd
 #these functions do not output ratios
 class absolute:
 
@@ -160,7 +161,8 @@ class absolute:
     #TODO: for angle > 90, (Angle % 90 - 45) = optimised angle
     #This code converts any angle to between 0 and 45
     #This allows the angle to be mapped onto the optimised DICT
-    def convAngle(angle):
+    def convAngle( angle):
+        angle=abs(angle)
         if angle > 90:
             angle = angle % 90
             if angle > 45:
@@ -171,9 +173,8 @@ class absolute:
                 angle=90-angle
                 return angle
         return angle
-    # print(convAngle(46))
+    # print(convAngle(-46.7))
     #TODO: Look above angle function
 
         
-
 

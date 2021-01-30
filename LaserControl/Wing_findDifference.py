@@ -1,41 +1,44 @@
+
 from ratioCodes import ratio
 from ratioCodes import absolute
-
 
 
 #TODO: check motor range as dict only goes up to 45 deg. 
 #TODO: implement code so that motor works up to 360 deg, 
 #TODO: for angle > 90, (Angle % 90 - 45) = optimised angle (look into microstepping)
 
-stepperIncrement=0.45
-laserIntensity = 1.2
-wantedIntensity =1
-Plaser_testVals = [0.95, 0.9, 0.8,0.7,1.1,1.2,1.05]
-motor_angle = 168
-Scaled_motor_angle = absolute.convAngle(motor_angle)
-Pd_test = 0.5
+stepperIncrement=0.45       #motor increment, 0.9,1.8,... deg whatever the motor is
+laserIntensity = 1.2        #initial laser intensity
+wantedIntensity =1          # required intensity
+Plaser_testVals = [0.95, 0.9, 0.8,0.7,1.1,1.2,1.05]     # test values for fluctuating originla laser beam
+motor_angle = 168       # current motor angle
+Scaled_motor_angle = absolute.convAngle(motor_angle)        # convert current motor angle into 0-45, which is dictionary bounds
+Pd_test = 0.5       # Current Pd laser detector test value
 
 Pc=[]
 Pd=[]
 Pi=[]
 
-print('If Pd = ', Pd_test,'and Scaled_motor_angle = ',Scaled_motor_angle, 'Pc = ',ratio.Pc_to_Pd(Scaled_motor_angle)*Pd_test)  #Find Pc at specific motor angle
+# Calculates current Pc from Pd and Curent motor angle
+print('If Pd =', Pd_test,'and Scaled_motor_angle =',Scaled_motor_angle, ' So Pc =',ratio.Pc_to_Pd(Scaled_motor_angle)*Pd_test,'\n') 
 
-Dict = ratio.find_ratioDict(stepperIncrement)   #Make Dict for stepper motor increment
-print('Ratio for motor', Dict)
+
+# Calculates dictionary based of stepper motor increments, transmittance etc.
+Dict = ratio.find_ratioDict(stepperIncrement)   
+
+#prints the dictionary (ratio, increment angle)
+print('Original Ratio for motor\n', Dict,'\n')
 
 #multiply every key in dict. by Pd, to find Pc according to angle
-Dict1= {k*Pd_test:v for (k,v) in Dict.items()}
-print('Pc Dict when Pd =',Dict1)
+DictPc= {k*Pd_test:v for (k,v) in Dict.items()}
+print('When Pd = ',Pd_test ,',The new Dict which shows the value of Pc at specific motor angles:\n',DictPc,'\n')
 
-#get closest angle to wantedIntensity
-print('closestAngle=',Dict1.get(wantedIntensity, Dict1[min(Dict1.keys(), key=lambda k:abs(k-wantedIntensity))]))
+# Find the closest Pc value in new dict to wanted intensity. Angle would be printed which is the closest. 
+print('The angle which the motor needs to be at to acheive wanted intensity=',DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))]))
 
-
-
-# print(Pc)
-# print(Pi)
-# print(Pd_test)
+# TODO: closest angle would always be in between 0-45, have to convert back to angle which is closest to motor.
+# EG. if motor is at 137 deg, and closest angle = 17deg. motor must move 26 deg to 163, instead of 30deg to 107 which is furthur even though it gives the same value. 
+# Refer to ratio graph to visualise
 
 
 

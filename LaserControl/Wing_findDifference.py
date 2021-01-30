@@ -5,7 +5,7 @@ from ratioCodes import absolute
 
 #TODO: check motor range as dict only goes up to 45 deg. 
 #TODO: implement code so that motor works up to 360 deg, 
-#TODO: for angle > 90, (Angle % 90 - 45) = optimised angle
+#TODO: for angle > 90, (Angle % 90 - 45) = optimised angle (look into microstepping)
 
 stepperIncrement=0.45
 laserIntensity = 1.2
@@ -30,7 +30,6 @@ print('Pc Dict when Pd =',Dict1)
 
 #get closest angle to wantedIntensity
 print('closestAngle=',Dict1.get(wantedIntensity, Dict1[min(Dict1.keys(), key=lambda k:abs(k-wantedIntensity))]))
-
 
 
 

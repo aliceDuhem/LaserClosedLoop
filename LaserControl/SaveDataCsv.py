@@ -8,14 +8,15 @@ import os
 #The columns will give the intensity and the error
 def createCsvFileData(data):
 
-    docName = 'intensity_readings_'
-    date_time = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")
-    file_extension =  '.csv'
+
+    docName = 'intensity_readings_' #beginning name document
+    date_time = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")   #adds the time to the title to make it unique
+    file_extension =  '.csv'    #needs the file extension in the name
     alreadyExists_str = 'second_'
     fileName = docName+date_time+file_extension
-    columns = ['timestamp','intensity','error']
-    separator = ','
-    format_columns = ['%s','%.6f','%.6f']
+    columns = ['timestamp','intensity','error'] #determines the 3 columns of the file
+    separator = ',' #separator between the 3 columns in a row
+    format_columns = ['%s','%.6f','%.6f']   #the datatype of the columns
 
     #makes sure that the headings and the columns are of the same dimensions
     if len(data[0]) != len(columns):
@@ -50,8 +51,8 @@ def createCsvFileData(data):
     file.close()
 
 def formatDateTime(date_time):
-    date_time = date_time.strftime("%Y-%b-%d %H:%M:%S")
+    date_time = date_time.strftime("%Y-%b-%d %H:%M:%S") #gives the correct format to the time
 
-
+#Tests the functions written above
 data = [[datetime.datetime.now(),0.012345,0.000001],[datetime.datetime(2021,1,19),0.234567,0.000222]]
 createCsvFileData(data)

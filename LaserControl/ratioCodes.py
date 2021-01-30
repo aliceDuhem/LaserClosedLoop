@@ -178,3 +178,20 @@ class absolute:
 
         
 
+
+class difference:
+
+    # Outputs Angle needed for wanted intensity at specific Pd
+    # Run to find new Pc everytime because Pd would change according to laser fluctuations
+    def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
+        
+        #scale motor angle
+        motor_angle=absolute.convAngle(motor_angle)
+        #multiply original Dict with Pd to see how Pc varies with motor angle
+        DictPc={k*Pd:v for (k,v) in oriDictionary.items()}
+        # Find the closest value Pc to wanted intensity from Dict, when system is
+        # at the specific Pd
+        closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
+        return closestVal
+
+

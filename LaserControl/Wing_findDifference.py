@@ -1,6 +1,7 @@
 
 from ratioCodes import ratio
 from ratioCodes import absolute
+from ratioCodes import difference
 
 
 #TODO: check motor range as dict only goes up to 45 deg. 
@@ -11,9 +12,9 @@ stepperIncrement=0.45       #motor increment, 0.9,1.8,... deg whatever the motor
 laserIntensity = 1.2        #initial laser intensity
 wantedIntensity =1          # required intensity
 Plaser_testVals = [0.95, 0.9, 0.8,0.7,1.1,1.2,1.05]     # test values for fluctuating originla laser beam
-motor_angle = 168       # current motor angle
+motor_angle = 80       # current motor angle
 Scaled_motor_angle = absolute.convAngle(motor_angle)        # convert current motor angle into 0-45, which is dictionary bounds
-Pd_test = 0.5       # Current Pd laser detector test value
+Pd_test = 0.1       # Current Pd laser detector test value
 
 Pc=[]
 Pd=[]
@@ -29,7 +30,7 @@ Dict = ratio.find_ratioDict(stepperIncrement)
 #prints the dictionary (ratio, increment angle)
 print('Original Ratio for motor\n', Dict,'\n')
 
-#multiply every key in dict. by Pd, to find Pc according to angle
+#multiply every key(ratio) in dict. by Pd, to find Pc according to angle
 DictPc= {k*Pd_test:v for (k,v) in Dict.items()}
 print('When Pd = ',Pd_test ,',The new Dict which shows the value of Pc at specific motor angles:\n',DictPc,'\n')
 
@@ -41,7 +42,19 @@ print('The angle which the motor needs to be at to acheive wanted intensity=',Di
 # Refer to ratio graph to visualise
 
 
+## Test with difference code
+
+# initial initialisation
+#     -make dictionary from param of optical elements
+#     - input wanted intensity
+
+# Loop (try make function to do all these)
+#     -find motor angle, Pd
+#     -calculate Pc from ratio Pc, Pd
+#     - multiply Pc with keys in origianl DIct, make new dict
+#     - find wanted intensity from Dict, and output angle
 
 
+print(difference.neededAngle(178,Pd_test, wantedIntensity, Dict))
 
 

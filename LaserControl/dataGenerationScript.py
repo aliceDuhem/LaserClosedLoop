@@ -3,7 +3,7 @@ import os
 from random import seed
 from random import random
 
-#Generates intensity data to test the code
+#Generates intensity data to test the code (assume W/cm^2)
 #Asks for the type of data generation - the increment it is at (first or last data)#
 # And if it is case 2, gets the file name to open it
 def dataGeneration(argument,laser_intensity,increment,fileArray):
@@ -11,7 +11,7 @@ def dataGeneration(argument,laser_intensity,increment,fileArray):
     #This case gives back a random data depending on the previous one
     if (argument==1):
         seed(1)
-        laser_intensity = laser_intensity+ laser_intensity*0.001*random()
+        laser_intensity = laser_intensity+ laser_intensity*0.01*random()
         return laser_intensity
 
     #This case reads from a file

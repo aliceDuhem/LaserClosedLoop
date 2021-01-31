@@ -54,5 +54,5 @@ def formatDateTime(date_time):
     date_time = date_time.strftime("%Y-%b-%d %H:%M:%S") #gives the correct format to the time
 
 #Tests the functions written above
-data = [[datetime.datetime.now(),0.012345,0.000001],[datetime.datetime(2021,1,19),0.234567,0.000222]]
-createCsvFileData(data)
+#data = [[datetime.datetime.now(),0.012345,0.000001],[datetime.datetime(2021,1,19),0.234567,0.000222]]
+#screateCsvFileData(data)

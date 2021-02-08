@@ -3,8 +3,10 @@
 import visa
 from ThorlabsPM100 import ThorlabsPM100
 
+power_meter_model = ThorlabsPM100;
+
 #Write in the brackets what was imported
-class PowerMeter(ThorlabsPM100):
+class PowerMeter(power_meter_model):
 
 #Method that create the power meter in the code
     def createInstrument(self):

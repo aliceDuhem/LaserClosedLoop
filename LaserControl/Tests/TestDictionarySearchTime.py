@@ -6,7 +6,7 @@ import time
 from ratioCodes import ratio
 from ratioCodes import absolute
 from ratioCodes import difference
-import Wing_findDifference
+import findDifference
 import dataGenerationScript
 import SaveDataCsv
 

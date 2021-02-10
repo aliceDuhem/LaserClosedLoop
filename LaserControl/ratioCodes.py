@@ -192,6 +192,7 @@ class difference:
         # Find the closest value Pc to wanted intensity from Dict, when system is
         # at the specific Pd
         closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
+        del DictPc
         return closestVal
 
 

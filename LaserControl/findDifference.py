@@ -8,7 +8,8 @@ from ratioCodes import difference
 #TODO: implement code so that motor works up to 360 deg, 
 #TODO: for angle > 90, (Angle % 90 - 45) = optimised angle (look into microstepping)
 
-stepperIncrement=0.45       #motor increment, 0.9,1.8,... deg whatever the motor is
+stepperIncrement=0.1       #motor increment, 0.9,1.8,... deg whatever the motor is
+
 laserIntensity = 1.2        #initial laser intensity
 wantedIntensity =1          # required intensity
 Plaser_testVals = [0.95, 0.9, 0.8,0.7,1.1,1.2,1.05]     # test values for fluctuating originla laser beam

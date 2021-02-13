@@ -1,4 +1,4 @@
-#COntrol the motor with the library search
+#COntrol the motor with the library search, Without PID
 
 import visa
 from LaserControl.GetPower import PowerMeter

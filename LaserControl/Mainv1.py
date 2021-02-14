@@ -1,8 +1,9 @@
 #COntrol the motor with the library search, Without PID
 
 import visa
-from LaserControl.GetPower import PowerMeter
+from GetPower import PowerMeter
 from guizero import App,Text,TextBox, PushButton
+from ratioCodes import * 
 
 # power on the RPi
 # Ask the user for a power value (as area is constant and intensity is power*Area and we use the ratio)

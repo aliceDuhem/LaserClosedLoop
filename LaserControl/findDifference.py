@@ -2,6 +2,7 @@
 from ratioCodes import ratio
 from ratioCodes import absolute
 from ratioCodes import difference
+import random
 
 
 #TODO: check motor range as dict only goes up to 45 deg. 
@@ -60,5 +61,6 @@ print('The angle which the motor needs to be at to acheive wanted intensity=',Di
 
 for i in Plaser_testVals:   
     print(difference.neededAngle(178,i, wantedIntensity, Dict))
+
 
 

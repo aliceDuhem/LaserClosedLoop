@@ -1,5 +1,5 @@
 import math
-
+import sys
 
 
 #inputs float
@@ -44,7 +44,7 @@ class ratio:
     # output dict format = {'ratio' : 'angle' }
     # motor increment must be in DEG
     # DICT created only goes from 0 to 45, optimisation, repetiition
-    #TODO: add angle 0 as inf. 
+    # Since ratio at angle 0 is inf, initialised MAXSIZE. 
 
     def find_ratioDict(motor_increment, cube_transmittance=1, cube_ref_trans=1):
 
@@ -56,15 +56,17 @@ class ratio:
         i=0
         ratio = {}
 
-
-        while i < 0.25* math.pi+0.000001:
+        # run i to make doctionary from angle 0 to 45 deg.
+        while i <= 0.25* math.pi:
 
             numerator = (cube_transmittance * math.sin(4*i + math.pi/2) +1) 
             denominator =  (cube_ref_trans * math.sin(4*i -math.pi/2)+1)
 
             #check for inf values or 0
-            if ((numerator ==0) or (denominator ==0)):
+            if (numerator ==0):
                 fraction =0
+            elif (denominator ==0):
+                fraction = sys.maxsize
             else:
                 fraction = numerator / denominator
 
@@ -158,7 +160,7 @@ class absolute:
 
     #TODO: check motor range as dict only goes up to 45 deg. 
     #TODO: implement code so that motor works up to 360 deg, 
-    #TODO: for angle > 90, (Angle % 90 - 45) = optimised angle
+    #for angle > 90, (Angle % 90 - 45) = optimised angle
     #This code converts any angle to between 0 and 45
     #This allows the angle to be mapped onto the optimised DICT
     def convAngle( angle):
@@ -167,14 +169,10 @@ class absolute:
             angle = angle % 90
             if angle > 45:
                 angle=90-angle
-                return angle
             return angle
         if angle > 45:
-                angle=90-angle
-                return angle
+            angle=90-angle
         return angle
-    # print(convAngle(-46.7))
-    #TODO: Look above angle function
 
         
 

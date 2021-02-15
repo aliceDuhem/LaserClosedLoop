@@ -25,6 +25,7 @@ def motor_calibration():
         #TODO: tell the raspberry Pi to go one step back (which should be max power meter value)
         print("The initialisation is finished")
 
+#Tests the code when we don't have the power meter connected to it (using arrays)
 def motor_calibration_array(array):
     pd_max_value=0;
     angle=0;

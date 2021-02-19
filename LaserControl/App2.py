@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 from guizero import App,Text,TextBox, PushButton
 #-----------------------------------------------------------------------------
 #Constant values
@@ -12,8 +9,7 @@ MIN_INCREMENT=0.000001
 MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
-#Function that stores the required power
-def desired_output():
+def validation():
     if correct_entry_type(desiredPower.value)==True:
         if correct_entry_range_power(float(desiredPower.value))==True:
             outputValue.value=desiredPower.value
@@ -22,7 +18,6 @@ def desired_output():
     else:
         outputValue.value= "Please enter a number"
 
-def motor_increment():
     if correct_entry_type(motorInc.value)==True:
         if correct_entry_range_increment(float(motorInc.value))==True:
             motorIncrement.value=motorInc.value
@@ -31,7 +26,6 @@ def motor_increment():
     else:
         motorIncrement.value= "Please enter a number"
 
-def hwp_transmittance():
     if correct_entry_type(HWPTrans.value)==True:
         if correct_entry_range_transmittance(float(HWPTrans.value))==True:
             HWPTransmittance.value=HWPTrans.value
@@ -40,7 +34,6 @@ def hwp_transmittance():
     else:
         HWPTransmittance.value= "Please enter a number"
 
-def cube_transmittance():
     if correct_entry_type(CubeTrans.value)==True:
         if correct_entry_range_transmittance(float(CubeTrans.value))==True:
             cubeTransmittance.value=CubeTrans.value
@@ -48,7 +41,6 @@ def cube_transmittance():
             cubeTransmittance.value= "Please enter a value in the range 0-1"
     else:
         cubeTransmittance.value= "Please enter the range"
-
 
 #Function that checks if the values is an float
 def correct_entry_type(float_output):
@@ -90,37 +82,28 @@ welcomeMessage = Text(app,text="Welcome to the Closed Loop Laser intensity regul
 boxPowerMessage=Text(app,text="Enter the desired laser output power")
 #Textbox where the user enters the desired power
 desiredPower=TextBox(app,width=50,height=10)
-#Button that validates the entry and stores the textbox value as desired output
-validationPower=PushButton(app,command=desired_output,text="Validate entry")
-#Display the value entered (just a sanity check)
-outputValue=Text(app, text="The output power will appear here")
-#Adds a space
+
 blank=Text(app,text="")
 
 boxIncMessage=Text(app,text="Enter the motor Increment")
 #Textbox where the user enters the desired power
 motorInc=TextBox(app,width=50,height=10)
-#Button that validates the entry and stores the textbox value as desired output
-validationMotorInc=PushButton(app,command=motor_increment,text="Validate increment")
-#Display the value entered (just a sanity check)
-motorIncrement=Text(app, text="The motor increment will appear here")
+
 blank=Text(app,text="")
 
 boxHWPMessage=Text(app,text="Enter the half wave plate transmittance")
 #Textbox where the user enters the desired power
 HWPTrans=TextBox(app,width=50,height=10)
-#Button that validates the entry and stores the textbox value as desired output
-validationHWP=PushButton(app,command=hwp_transmittance,text="Validate transmittance")
-HWPTransmittance=Text(app, text="The half wave plate transmittance will appear here")
+
 blank=Text(app,text="")
 
 boxCubeMessage=Text(app,text="Enter the cube transmittance")
 #Textbox where the user enters the desired power
 CubeTrans=TextBox(app,width=50,height=10)
-#Button that validates the entry and stores the textbox value as desired output
-validationCubeTrans=PushButton(app,command=cube_transmittance,text="Validate increment")
-cubeTransmittance=Text(app, text="The cube transmittance will appear here")
+
 blank=Text(app,text="")
 
+#Button that validates the entry and stores the textbox value as desired output
+validation=PushButton(app,command=validation,text="Validate Entry")
 
 app.display()

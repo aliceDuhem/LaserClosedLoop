@@ -29,7 +29,7 @@ class PowerMeter(power_meter_model):
 
 
 # These are commands, methods of the class
-#print(power_meter.read) # Read-only property
+# print(power_meter.read) # Read-only property
 #print(power_meter.sense.average.count) # read property
 #power_meter.sense.average.count = 10 # write property, sense avg, 1 sample ~=3ms
 #power_meter.system.beeper.immediate() # method, issues an audible signal

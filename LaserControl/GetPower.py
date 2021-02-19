@@ -1,15 +1,16 @@
 
 #This first part cretaes the instrument we use
 import visa
+import pyvisa as visa
 from ThorlabsPM100 import ThorlabsPM100
 
 power_meter_model = ThorlabsPM100;
 
 #Write in the brackets what was imported
-class PowerMeter(power_meter_model):
+class powerMeter:
 
 #Method that create the power meter in the code
-    def createInstrument(self):
+    def createInstrument():
         try:
             rm = visa.ResourceManager()
         except:
@@ -23,8 +24,11 @@ class PowerMeter(power_meter_model):
 
         power_meter = ThorlabsPM100(inst=inst)
 
+        return power_meter
+
     def readPower(self):
         experimental_value = power_meter.read
+        return experimental_value
 
 
 

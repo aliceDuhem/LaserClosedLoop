@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Power on the RPi
 # Ask the user for a power value (as area is constant and intensity is power*Area and we use the ratio)
 
@@ -26,3 +27,6 @@
 # Write the values in CSV file for data analysis
 # Destroy main DICTIONARY
 # Shut RPi
+=======
+# with PID
+>>>>>>> d724e92ccd415d327e0f3dcf249a20423d12891f

@@ -2,13 +2,17 @@
 from ratioCodes import ratio
 from ratioCodes import absolute
 from ratioCodes import difference
+import random
+from general_characteristics import characteristics
+import App
 
 
 #TODO: check motor range as dict only goes up to 45 deg. 
 #TODO: implement code so that motor works up to 360 deg, 
 #TODO: for angle > 90, (Angle % 90 - 45) = optimised angle (look into microstepping)
 
-stepperIncrement=0.45       #motor increment, 0.9,1.8,... deg whatever the motor is
+stepperIncrement=0.1       #motor increment, 0.9,1.8,... deg whatever the motor is
+
 laserIntensity = 1.2        #initial laser intensity
 wantedIntensity =1          # required intensity
 Plaser_testVals = [0.95, 0.9, 0.8,0.7,1.1,1.2,1.05]     # test values for fluctuating originla laser beam
@@ -60,4 +64,6 @@ print('The angle which the motor needs to be at to acheive wanted intensity=',Di
 for i in Plaser_testVals:   
     print(difference.neededAngle(178,i, wantedIntensity, Dict))
 
+print(desiredIntensity)
+print(outputValue)
 

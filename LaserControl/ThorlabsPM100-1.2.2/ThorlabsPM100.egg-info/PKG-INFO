@@ -1,10 +1,12 @@
-Metadata-Version: 1.1
+Metadata-Version: 1.2
 Name: ThorlabsPM100
 Version: 1.2.2
 Summary: Interface to the PM100A/D power meter from Thorlabs.
 Home-page: http://pythonhosted.org/ThorlabsPM100
 Author: Pierre CladÃ©
 Author-email: pierre.clade@spectro.jussieu.fr
+Maintainer: Pierre CladÃ©
+Maintainer-email: pierre.clade@spectro.jussieu.fr
 License: This software can be used under one of the following two licenses: (1) The BSD license. (2) Any other license, as long as it is obtained from the original author.
 Description: Overview
         ========

@@ -7,4 +7,5 @@ class characteristics:
     halfWave_transmittance=1;
     cube_ref_trans=1;
     cube_transmittance=1;
+    Pd=2;
     

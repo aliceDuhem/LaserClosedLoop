@@ -12,35 +12,35 @@ MAX_INCREMENT=4
 def validation():
     if correct_entry_type(desiredPower.value)==True:
         if correct_entry_range_power(float(desiredPower.value))==True:
-            outputValue.value=desiredPower.value
+            outputValue=desiredPower.value
         else:
-            outputValue.value= "Please enter a value in the range 0-10000"
+            outputValue= "Please enter a value in the range 0-10000"
     else:
-        outputValue.value= "Please enter a number"
+        outputValue= "Please enter a number"
 
     if correct_entry_type(motorInc.value)==True:
         if correct_entry_range_increment(float(motorInc.value))==True:
-            motorIncrement.value=motorInc.value
+            motorIncrement=motorInc.value
         else:
-            motorIncrement.value= "Please enter a value in the range 0.001-2"
+            motorIncrement= "Please enter a value in the range 0.001-2"
     else:
-        motorIncrement.value= "Please enter a number"
+        motorIncrement= "Please enter a number"
 
     if correct_entry_type(HWPTrans.value)==True:
         if correct_entry_range_transmittance(float(HWPTrans.value))==True:
-            HWPTransmittance.value=HWPTrans.value
+            HWPTransmittance=HWPTrans.value
         else:
-            HWPTransmittance.value= "Please enter a value in the range 0-1"
+            HWPTransmittance= "Please enter a value in the range 0-1"
     else:
-        HWPTransmittance.value= "Please enter a number"
+        HWPTransmittance= "Please enter a number"
 
     if correct_entry_type(CubeTrans.value)==True:
         if correct_entry_range_transmittance(float(CubeTrans.value))==True:
-            cubeTransmittance.value=CubeTrans.value
+            cubeTransmittance=CubeTrans.value
         else:
-            cubeTransmittance.value= "Please enter a value in the range 0-1"
+            cubeTransmittance= "Please enter a value in the range 0-1"
     else:
-        cubeTransmittance.value= "Please enter the range"
+        cubeTransmittance= "Please enter the range"
 
 #Function that checks if the values is an float
 def correct_entry_type(float_output):

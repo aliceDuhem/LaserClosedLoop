@@ -59,8 +59,8 @@ class ratio:
         # run i to make doctionary from angle 0 to 45 deg.
         while i <= 0.25* math.pi:
 
-            numerator = (cube_transmittance * math.sin(4*i + math.pi/2) +1) 
-            denominator =  (cube_ref_trans * math.sin(4*i -math.pi/2)+1)
+            denominator = (cube_transmittance * math.sin(4*i + math.pi/2) +1) 
+            numerator =  (cube_ref_trans * math.sin(4*i -math.pi/2)+1)
 
             #check for inf values or 0
             if (numerator ==0):
@@ -133,8 +133,8 @@ class ratio:
         #trig in math module works in RAD, convert motor increenet in degrees to rad
         motor_angle = math.radians(motor_angle)
 
-        numerator = (cube_transmittance * math.sin(4*motor_angle + math.pi/2) +1) 
-        denominator =  (cube_ref_trans * math.sin(4*motor_angle -math.pi/2)+1)
+        denominator = (cube_transmittance * math.sin(4*motor_angle + math.pi/2) +1) 
+        numerator =  (cube_ref_trans * math.sin(4*motor_angle -math.pi/2)+1)
 
         ratio = numerator/denominator
 

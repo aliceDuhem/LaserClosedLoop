@@ -2,20 +2,18 @@
 #This first part cretaes the instrument we use
 import visa
 import pyvisa as visa
+#import here the data from another power meter
 from ThorlabsPM100 import ThorlabsPM100
 
-power_meter_model = ThorlabsPM100;
-
 #Write in the brackets what was imported
-class powerMeter:
+class PowerMeter:
 
 #Method that create the power meter in the code
-    def createInstrument(self):
+    def __init__(self):
         try:
             rm = visa.ResourceManager()
         except:
             print('Library visa not installed on the device')
-
         try:
             inst = rm.open_resource('USB0::0x0000::0x0000::xxxxxxxxx::INSTR',
                         term_chars='\n', timeout=1)
@@ -24,13 +22,12 @@ class powerMeter:
 
         power_meter = ThorlabsPM100(inst=inst)
 
-        return power_meter
-
     def readPower(self):
         experimental_value = power_meter.read
-        return experimental_value
 
-
+#Tests
+power = PowerMeter()
+print(power.readPower())
 
 
 # These are commands, methods of the class

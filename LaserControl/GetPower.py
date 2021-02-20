@@ -10,7 +10,7 @@ power_meter_model = ThorlabsPM100;
 class powerMeter:
 
 #Method that create the power meter in the code
-    def createInstrument():
+    def createInstrument(self):
         try:
             rm = visa.ResourceManager()
         except:
@@ -29,6 +29,7 @@ class powerMeter:
     def readPower(self):
         experimental_value = power_meter.read
         return experimental_value
+
 
 
 

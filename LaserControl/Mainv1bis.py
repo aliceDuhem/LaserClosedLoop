@@ -6,6 +6,7 @@ from guizero import App,Text,TextBox, PushButton
 from ratioCodes import *
 from characteristics import Characteristics
 from time import sleep
+import threading
 #from GetPower import PowerMeter
 
 

@@ -9,12 +9,12 @@ import os
 def createCsvFileData(data):
 
 
-    docName = 'intensity_readings_' #beginning name document
+    docName = 'power_readings_' #beginning name document
     date_time = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")   #adds the time to the title to make it unique
     file_extension =  '.csv'    #needs the file extension in the name
     alreadyExists_str = 'second_'
     fileName = docName+date_time+file_extension
-    columns = ['timestamp','intensity','error'] #determines the 3 columns of the file
+    columns = ['timestamp','power','error'] #determines the 3 columns of the file
     separator = ',' #separator between the 3 columns in a row
     format_columns = ['%s','%.6f','%.6f']   #the datatype of the columns
 

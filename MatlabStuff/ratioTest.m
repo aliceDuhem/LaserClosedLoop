@@ -81,4 +81,4 @@ ratio(1+j) = cubeP_trans.* power(mean(outEy./outRefEz),2);
 end 
 
 figure
-plot(test,ratio)
+plot(test,1./ratio)

@@ -1,11 +1,8 @@
-
-#This first part cretaes the instrument we use
-import visa
 import pyvisa as visa
-#import here the data from another power meter
+#If necessary, import here the data from another power meter
 from ThorlabsPM100 import ThorlabsPM100
 
-#Write in the brackets what was imported
+
 class PowerMeter:
 
 #Method that create the power meter in the code
@@ -15,24 +12,38 @@ class PowerMeter:
         except:
             print('Library visa not installed on the device')
         try:
-            inst = rm.open_resource('USB0::0x0000::0x0000::xxxxxxxxx::INSTR',
-                        term_chars='\n', timeout=1)
+            #Gets the port where the power meter is
+            usb_port = rm.list_resources()
+            print(rm.list_resources())
+            usb_port_str=str(usb_port)
+            usb='';
+            for i in range (2,39):
+                usb = usb+usb_port_str[i]
+            print(usb)
+
+            #Value read from the previous command
+            #Otherwise write in the form 'USB0::0x0000::0x0000::xxxxxxxx::INSTR'
+            inst = rm.open_resource(usb)
         except OSError:
-            print('Cannot open ', 'USB0::0x0000::0x0000::xxxxxxxxx::INSTR')
+            print('Cannot open ', usb)
 
-        power_meter = ThorlabsPM100(inst=inst)
+        #Creates in the class an instance of the power meter
+        self.power_meter = ThorlabsPM100(inst=inst)
 
-    def readPower(self):
+    #Reads the power at a given time
+    def readPower(self,power_meter):
         experimental_value = power_meter.read
+        return experimental_value
 
-#Tests
+#Tests and how to use the code
+
 power = PowerMeter()
-print(power.readPower())
+print(power.readPower(power.power_meter))
 
 
 # These are commands, methods of the class
-# print(power_meter.read) # Read-only property
-#print(power_meter.sense.average.count) # read property
-#power_meter.sense.average.count = 10 # write property, sense avg, 1 sample ~=3ms
-#power_meter.system.beeper.immediate() # method, issues an audible signal
-#experimental_value = print(power_meter.read) # Read-only property
+""" print(power_meter.read) # Read-only property
+print(power_meter.sense.average.count) # read property
+power_meter.sense.average.count = 10 # write property, sense avg, 1 sample ~=3ms
+power_meter.system.beeper.immediate() # method, issues an audible signal
+experimental_value = print(power_meter.read) # Read-only property"""

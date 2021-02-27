@@ -9,14 +9,15 @@
 
 import os
 from time import sleep
+from GetPower import PowerMeter
 
-def motor_calibration():
-    pd_max_value=0;
-    reaction_time_Rpi = 10;
+def motor_to_0(pm):
+    pd_max_value=0
+    reaction_time_Rpi = 10
 
-    while (readPower()>pd_max_value):
+    while (pm.readPower()>pd_max_value):
         #The power does not change when we read it as the plate has rotated already
-        pd_max_value=readPower()
+        pd_max_value=pm.readPower()
         #TODO: give to the raspberry Pi an angle to rotate from, take from function
         #Wait until the RPi has changed the angle of the half wave plate
         sleep(reaction_time_Rpi)
@@ -24,6 +25,28 @@ def motor_calibration():
     else:
         #TODO: tell the raspberry Pi to go one step back (which should be max power meter value)
         print("The initialisation is finished")
+
+def motor_to_initial_power(pm,wantedPower,motorIncrement):
+    # Set up the power meter and Dictionnary
+    #---------------------------------------------------------------------------
+    #the time the signal takes to go from the code to the RPi
+    reaction_time_Rpi = 10
+    # current motor angle, after calibration
+    current_motor_angle = 0
+
+    #Pd = pm.readPower();
+    Pd=1;
+
+    # Calculates dictionary based of stepper motor increments, transmittance etc.
+    oriDictionary = ratio.find_ratioDict(motorIncrement)
+
+    #Angle at which the motor needs to be at to achieve the wanted intensity
+    additional_angle = difference.neededAngle(current_motor_angle,Pd, wantedPower, oriDictionary)
+
+    #The new angle is the previous one + the angle by which the motor turns
+    current_motor_angle=current_motor_angle+additional_angle;
+    #TODO: enter the function that sends the code to the Rpi
+
 
 #Tests the code when we don't have the power meter connected to it (using arrays)
 def motor_calibration_array(array):

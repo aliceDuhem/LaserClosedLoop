@@ -185,11 +185,12 @@ class difference:
         
         #scale motor angle
         motor_angle=absolute.convAngle(motor_angle)
-        #multiply original Dict with Pd to see how Pc varies with motor angle
-        DictPc={k*Pd:v for (k,v) in oriDictionary.items()}
+        #multiply original Dict with Pd to see how 1/Pc varies with motor angle
+        DictPc={k*1/Pd:v for (k,v) in oriDictionary.items()}
         # Find the closest value Pc to wanted intensity from Dict, when system is
         # at the specific Pd
-        closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
+
+        closestVal = DictPc.get(1/wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-1/wantedIntensity))])
         del DictPc
         return closestVal
 

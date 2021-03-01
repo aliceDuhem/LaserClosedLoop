@@ -19,17 +19,17 @@ MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
 #Initialise the values that are being used
-motorIncrement = 0.1
-wantedPower = 0.00055
+motorIncrement = 0.9
+wantedPower = 0.005
 HWPTransmittance = 0.98
 cubeTransmittance = 0.955
 cubeRefTransmittance=1
-current_motor_angle=0
+current_motor_angle=45
 #-----------------------------------------------------------------------------
 def createCsvFileData(data):
 
 
-    docName = 'Test_Dictionary_motorInc_01_wantedPower_055_' #beginning name document
+    docName = 'Test_Dictionary_motorInc_09_wantedPower_5_' #beginning name document
     date_time = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")   #adds the time to the title to make it unique
     file_extension =  '.csv'    #needs the file extension in the name
     alreadyExists_str = 'second_'
@@ -52,7 +52,7 @@ def createCsvFileData(data):
     file = open(fileName, 'w')
 
     #Writes an header/description of the document: time the measures started
-    line = 'Intensity recordings for experiment starting at '+ str(data[0][0]) +'. readings every '+ str(data[1][0]-data[0][0]) + ' seconds, wanted power = 0.55mW \n'
+    line = 'Intensity recordings for experiment starting at '+ str(data[0][0]) +'. readings every '+ str(data[1][0]-data[0][0]) + ' seconds, wanted power = 5mW \n'
     file.write(line)
 
     #each case of columns is separates on a line by a comma (separator),
@@ -80,7 +80,7 @@ ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransm
 
 data_array=[]
 
-for i in range(20):
+for i in range(5):
     inst_power=pm.readPower(pm.power_meter)
     error= inst_power-wantedPower
     neededAngle = difference.neededAngle(current_motor_angle, inst_power,wantedPower, ratio_dict)

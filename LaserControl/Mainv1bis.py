@@ -7,7 +7,6 @@ from ratioCodes import *
 from characteristics import Characteristics
 from time import sleep
 import threading
-#from GetPower import PowerMeter
 
 
 ##Don't use OOP: makes things more difficult

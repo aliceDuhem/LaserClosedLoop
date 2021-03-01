@@ -3,7 +3,7 @@
 import pyvisa as visa
 import os
 import datetime
-# from GetPower import PowerMeter
+from GetPower import PowerMeter
 from ratioCodes import ratio
 from ratioCodes import difference
 from ratioCodes import absolute
@@ -24,7 +24,7 @@ MAX_INCREMENT=4
 #-----------------------------------------------------------------------------
 #Initialise the values that are being used
 motorIncrement = 0.1
-wantedPower = 0.0025
+wantedPower = 0.0085
 HWPTransmittance = 0.1
 cubeTransmittance = 0.1
 cubeRefTransmittance=0.5
@@ -37,9 +37,9 @@ def motor_to_0(pm):
     pd_max_value=0
     reaction_time_Rpi = 10
 
-    while (pm.readPower()>pd_max_value):
+    while (pm.readPower(pm.power_meter)>pd_max_value):
         #The power does not change when we read it as the plate has rotated already
-        pd_max_value=pm.readPower()
+        pd_max_value=pm.readPower(pm.power_meter)
         #TODO: give to the raspberry Pi an angle to rotate from, take from function
         #Wait until the RPi has changed the angle of the half wave plate
         sleep(reaction_time_Rpi)
@@ -56,8 +56,8 @@ def motor_to_initial_power(pm,wantedPower,motorIncrement):
     # current motor angle, after calibration
     current_motor_angle = 0
 
-    #Pd = pm.readPower();
-    Pd=1;
+    Pd = pm.readPower(pm.power_meter)
+    #Pd=1;
 
     # Calculates dictionary based of stepper motor increments, transmittance etc.
     oriDictionary = ratio.find_ratioDict(motorIncrement)
@@ -123,7 +123,7 @@ def formatDateTime(date_time):
 # # power on the RPi and command initialisation
 
 #initialise power meter
-#pm = PowerMeter() #puts an error in the command window if power meter not plugged in
+pm = PowerMeter() #puts an error in the command window if power meter not plugged in
 
 # Rotate to 0
 motor_to_0(pm)
@@ -146,14 +146,14 @@ ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransm
     # Deconstruct the second dictionary --> already done in function
     # Write values in CSV (or in data array)
 #end of the loop
-data_array=[][]
+data_array=[]
 
-while(True):
-    inst_power=pm.readPower()
+for i in range(10):
+    inst_power=pm.readPower(pm.power_meter)
     error= inst_power-wantedPower
     neededAngle = difference.neededAngle(current_motor_angle, inst_power,wantedPower, ratio_dict)
     angle_rotation = current_motor_angle-neededAngle
-    a=[datetime.datetime.now(),inst_power,error]
+    a=[datetime.datetime.now(),inst_power,neededAngle]
     data_array.append(a)
 
 #Optionanl - send back to 0

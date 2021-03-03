@@ -77,6 +77,8 @@ def formatDateTime(date_time):
 pm = PowerMeter()
 
 ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
+# remove 0 from dict so it can work in difference.neededangle as del does not work inside
+del Dict[0] # Python cannot divide by 0
 
 data_array=[]
 

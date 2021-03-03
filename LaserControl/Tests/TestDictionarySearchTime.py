@@ -22,6 +22,8 @@ data=[]
 
 # Calculates dictionary based of stepper motor increments, transmittance etc.
 Dict = ratio.find_ratioDict(stepperIncrement)
+# remove 0 from dict so it can work in difference.neededangle as del does not work inside
+del Dict[0] # Python cannot divide by 0
 
 
 t0 =time.time()

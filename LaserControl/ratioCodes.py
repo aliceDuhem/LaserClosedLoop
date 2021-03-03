@@ -1,5 +1,6 @@
 import math
 import sys
+from typing import OrderedDict
 
 
 #inputs float
@@ -74,7 +75,6 @@ class ratio:
             ratio[fraction]=math.degrees(i)
             i = i+motor_increment
 
-        
         return ratio
 
 
@@ -123,7 +123,7 @@ class ratio:
 
          # 45, 135, .. deg, Pc =0, Pd = Max
         if (motor_angle ==45 or motor_angle == 135 or motor_angle == 225 or motor_angle == 315):
-            return 0
+            return sys.maxsize  #after inversion pd/pc
 
         # TODO:  find a way to find max instataneous power variation
         # 0, 90, ..., deg, Pc = Max, Pd = 0
@@ -153,7 +153,7 @@ class absolute:
      #function to find instataneous Pc given angles and other variables
     def Pc_from_Pd(Pd, motor_angle, cube_transmittance=1, cube_ref_trans=1):
 
-        return Pd * ratio.Pc_to_Pd(motor_angle, cube_transmittance,cube_ref_trans)
+        return Pd * 1/ratio.Pc_to_Pd(motor_angle, cube_transmittance,cube_ref_trans)
 
 
 
@@ -181,17 +181,32 @@ class difference:
 
     # Outputs Angle needed for wanted intensity at specific Pd
     # Run to find new Pc everytime because Pd would change according to laser fluctuations
+    # def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
+
     def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
         
+        
+
+
         #scale motor angle
         motor_angle=absolute.convAngle(motor_angle)
         #multiply original Dict with Pd to see how 1/Pc varies with motor angle
-        DictPc={k*1/Pd:v for (k,v) in oriDictionary.items()}
+        
+        DictPc={Pd/k:v for (k,v) in oriDictionary.items()}
         # Find the closest value Pc to wanted intensity from Dict, when system is
         # at the specific Pd
 
-        closestVal = DictPc.get(1/wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-1/wantedIntensity))])
+        # Must delete 0 before putting dict into function
+        # add zeros as key and val after devision because python cannot deal with 0's
+        zeros = {0.0:0.0}
+        DictPc.update(zeros)
+
+        closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
+        
+        # check if calculated(wanted) Pc is more than wanted intensity, if true give max power, deg=0
+        if (Pd/ratio.Pc_to_Pd(closestVal)) > wantedIntensity:
+            return 0
+
         del DictPc
         return closestVal
-
 

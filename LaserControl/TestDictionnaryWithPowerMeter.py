@@ -19,8 +19,8 @@ MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
 #Initialise the values that are being used
-motorIncrement = 0.9
-wantedPower = 0.005
+motorIncrement = 0.45
+wantedPower = 0.001
 HWPTransmittance = 0.98
 cubeTransmittance = 0.955
 cubeRefTransmittance=1
@@ -78,7 +78,7 @@ pm = PowerMeter()
 
 ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
 # remove 0 from dict so it can work in difference.neededangle as del does not work inside
-del Dict[0] # Python cannot divide by 0
+del ratio_dict[0] # Python cannot divide by 0
 
 data_array=[]
 

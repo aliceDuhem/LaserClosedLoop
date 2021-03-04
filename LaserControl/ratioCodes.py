@@ -203,8 +203,10 @@ class difference:
 
         closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
         
+        if closestVal ==0:
+            return 0
         # check if calculated(wanted) Pc is more than wanted intensity, if true give max power, deg=0
-        if (Pd/ratio.Pc_to_Pd(closestVal)) > wantedIntensity:
+        elif ( wantedIntensity > Pd/ratio.Pc_to_Pd(closestVal)):
             return 0
 
         del DictPc

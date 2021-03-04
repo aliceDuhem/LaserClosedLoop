@@ -136,7 +136,7 @@ current_motor_angle=motor_to_initial_power(pm,wantedPower,motorIncrement)
 ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
 
 # remove 0 from dict so it can work in difference.neededangle as del does not work inside
-del Dict[0] # Python cannot divide by 0
+del ratio_dict[0] # Python cannot divide by 0
 
 #Loop:
     # Reads the value from the power PowerMeter

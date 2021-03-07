@@ -15,7 +15,7 @@ stepperIncrement=1       #motor increment, 0.9,1.8,... deg whatever the motor is
 # laserIntensity = 1.2        #initial laser intensity
 wantedIntensity =0.8        # required intensity
 Plaser_testVals = [0.6, 0.7, 0.8, 0.85, 0.9, 1, 1.05]     # test values for fluctuating originla laser beam
-motor_angle = 30    # current motor angle
+motor_angle = 45    # current motor angle
 Scaled_motor_angle = absolute.convAngle(motor_angle)        # convert current motor angle into 0-45, which is dictionary bounds
 Pd_test = 1.05      # Current Pd laser detector test value
 

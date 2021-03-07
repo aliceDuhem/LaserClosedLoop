@@ -1,6 +1,8 @@
 import math
 import sys
 from typing import OrderedDict
+# from GetPower import PowerMeter
+
 
 
 #inputs float
@@ -58,7 +60,7 @@ class ratio:
         ratio = {}
 
         # run i to make doctionary from angle 0 to 45 deg.
-        while i <= 0.25* math.pi:
+        while i <= 0.25* math.pi + 0.0001:
 
             denominator = (cube_transmittance * math.sin(4*i + math.pi/2) +1) 
             numerator =  (cube_ref_trans * math.sin(4*i -math.pi/2)+1)
@@ -72,7 +74,7 @@ class ratio:
                 fraction = numerator / denominator
 
             #put angles and ratio into ductionary
-            ratio[fraction]=math.degrees(i)
+            ratio[fraction]=round(math.degrees(i),2)
             i = i+motor_increment
 
         return ratio
@@ -112,10 +114,9 @@ class ratio:
 
 
 
-    #output ratio Pc / Pd
+    #output ratio Pc / Pd at specific motor angle
     #Analytical solution version, better than Dict I think
     def Pc_to_Pd(motor_angle, cube_transmittance=1,cube_ref_trans=1):
-
          #Convert angles to 0<angle<360
         if motor_angle>360:
             motor_angle = motor_angle%360
@@ -150,10 +151,18 @@ class absolute:
 
 
 
-     #function to find instataneous Pc given angles and other variables
+     #function to find instataneous Pc at specific angle
     def Pc_from_Pd(Pd, motor_angle, cube_transmittance=1, cube_ref_trans=1):
 
-        return Pd * 1/ratio.Pc_to_Pd(motor_angle, cube_transmittance,cube_ref_trans)
+        denom =ratio.Pc_to_Pd(motor_angle, cube_transmittance,cube_ref_trans)
+        
+        if denom ==0:
+
+            # return pm.readPower(pm.power_meter)
+            # no power meter connected so run bottom
+            return sys.maxsize
+
+        return Pd * 1/denom
 
 
 
@@ -183,32 +192,54 @@ class difference:
     # Run to find new Pc everytime because Pd would change according to laser fluctuations
     # def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
 
-    def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
+    def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary, oriLaserPower):
         
-        
-
 
         #scale motor angle
-        motor_angle=absolute.convAngle(motor_angle)
+        motor_angle=round(absolute.convAngle(motor_angle),2)
         #multiply original Dict with Pd to see how 1/Pc varies with motor angle
-        
         DictPc={Pd/k:v for (k,v) in oriDictionary.items()}
+
+        if motor_angle ==45.00:
+            # temp filler for angle 0
+            zeros = {Pd/ratio.Pc_to_Pd(motor_angle):0.0}
+
+            # use bottom when connected to power meter
+            # zeros = {pm.readPower(pm.power_meter):0.0}
+            DictPc.update(zeros)
+
+        # elif motor_angle ==0:
+            # original power of laser, no way of detecting it as no power goes to the detector
+
+        else:
+            # Must delete 0 before putting dict into function
+            # add zeros as key and val after devision because python cannot deal with 0's
+            zeros = {sys.maxsize:0.0}
+            DictPc.update(zeros)
+
+        # print(DictPc)
+
         # Find the closest value Pc to wanted intensity from Dict, when system is
         # at the specific Pd
-
-        # Must delete 0 before putting dict into function
-        # add zeros as key and val after devision because python cannot deal with 0's
-        zeros = {0.0:0.0}
-        DictPc.update(zeros)
-
         closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
-        
+        # print(Pd/ratio.Pc_to_Pd(closestVal) +Pd)
+
         if closestVal ==0:
+            # print("UUUUUUU")
             return 0
-        # check if calculated(wanted) Pc is more than wanted intensity, if true give max power, deg=0
-        elif ( wantedIntensity > Pd/ratio.Pc_to_Pd(closestVal)):
+
+        # check if calculated(wanted) Pc is more than total intensity (Pc +Pd), if true give max power, deg=0
+        # IGNORE LINE-->: cannot use Pd as we need to kmow (somewhat) the definate max power, and Pd does not give us a clue
+        elif ( wantedIntensity > Pd/ratio.Pc_to_Pd(closestVal) +Pd):
+            # print("UYYYYYY")
+
             return 0
+
+
 
         del DictPc
         return closestVal
+
+
+        
 

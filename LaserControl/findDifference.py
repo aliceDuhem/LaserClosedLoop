@@ -12,12 +12,12 @@ from general_characteristics import characteristics
 
 stepperIncrement=1       #motor increment, 0.9,1.8,... deg whatever the motor is
 
-# laserIntensity = 1.2        #initial laser intensity
-wantedIntensity =1          # required intensity
-Plaser_testVals = [0.95, 0.9, 0.8,0.7,1.1,1.2,1.05]     # test values for fluctuating originla laser beam
-motor_angle = 30      # current motor angle
+laserIntensity = 1.2        #initial laser intensity
+wantedIntensity =0.8        # required intensity
+Plaser_testVals = [0.6, 0.7, 0.8, 0.85, 0.9, 1, 1.05]     # test values for fluctuating originla laser beam
+motor_angle = 30    # current motor angle
 Scaled_motor_angle = absolute.convAngle(motor_angle)        # convert current motor angle into 0-45, which is dictionary bounds
-Pd_test = 0.1       # Current Pd laser detector test value
+Pd_test = 1.05      # Current Pd laser detector test value
 
 # Pc=[]
 # Pd=[]
@@ -33,6 +33,7 @@ Dict = ratio.find_ratioDict(stepperIncrement)
 print('Original Ratio for motor\n', Dict,'\n')
 
 del Dict[0]
+
 #multiply every key(ratio) in dict. by Pd, to find Pc according to angle
 DictPc= {Pd_test/k:v for (k,v) in Dict.items()}
 print('When Pd = ',Pd_test ,',The new Dict which shows the value of Pc at specific motor angles:\n',DictPc,'\n')
@@ -61,11 +62,11 @@ print('When Pd = ',Pd_test ,',The new Dict which shows the value of Pc at specif
 #     - find wanted intensity from Dict, and output angle
 
 for i in Plaser_testVals:   
-    print("----------Pd = ",i,"-----------------")
+    print("\n----------Pd = ",i,"-----------------")
     print("ratio Pd/Pc,", ratio.Pc_to_Pd(motor_angle))
     print("Current Pc when Pd is the above,", absolute.Pc_from_Pd(i,motor_angle))
-    print("Angle needed,",difference.neededAngle(motor_angle,i, wantedIntensity, Dict))
-    print("New Pd / Pc ratio,", ratio.Pc_to_Pd(difference.neededAngle(motor_angle,i, wantedIntensity, Dict)))
+    print("Angle needed,",difference.neededAngle(motor_angle,i, wantedIntensity, Dict,laserIntensity))
+    print("New Pd / Pc ratio,", ratio.Pc_to_Pd(difference.neededAngle(motor_angle,i, wantedIntensity, Dict,laserIntensity)))
 # print(Dict.pop(0.0))
 # print(Dict)
 

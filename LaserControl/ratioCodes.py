@@ -192,7 +192,7 @@ class difference:
     # Run to find new Pc everytime because Pd would change according to laser fluctuations
     # def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
 
-    def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary, oriLaserPower):
+    def neededAngle(motor_angle,Pd, wantedIntensity, oriDictionary):
         
 
         #scale motor angle

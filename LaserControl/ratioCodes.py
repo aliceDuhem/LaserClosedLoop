@@ -197,11 +197,14 @@ class difference:
 
         #scale motor angle
         motor_angle=round(absolute.convAngle(motor_angle),2)
-        #multiply original Dict with Pd to see how 1/Pc varies with motor angle
+
+        #multiply every value in original Dict with Pd to see how Pc varies with motor angle
         DictPc={Pd/k:v for (k,v) in oriDictionary.items()}
+        #DictPc is just theoretical Pc values at every single angle, it does not take into account limits such as max input value and so on
 
         if motor_angle ==45.00:
-            # temp filler for angle 0
+            # at instant 45 deg, Pc at 0deg would be the max value, max value in this case is power meter reading
+            # as at 45 deg all the power goes to the detector, code at the bottom with getpower solves this
             zeros = {Pd/ratio.Pc_to_Pd(motor_angle):0.0}
 
             # use bottom when connected to power meter
@@ -217,7 +220,7 @@ class difference:
             zeros = {sys.maxsize:0.0}
             DictPc.update(zeros)
 
-        # print(DictPc)
+        print(DictPc)
 
         # Find the closest value Pc to wanted intensity from Dict, when system is
         # at the specific Pd

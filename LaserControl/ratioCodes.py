@@ -1,7 +1,7 @@
 import math
 import sys
 from typing import OrderedDict
-# from GetPower import PowerMeter
+from GetPower import PowerMeter
 
 
 
@@ -197,19 +197,34 @@ class difference:
 
         #scale motor angle
         motor_angle=round(absolute.convAngle(motor_angle),2)
-        print(Pd/ratio.Pc_to_Pd(motor_angle))
+        # print(Pd/ratio.Pc_to_Pd(motor_angle))
         #multiply every value in original Dict with Pd to see how Pc varies with motor angle
-        DictPc={Pd/k:v for (k,v) in oriDictionary.items()}
+        DictPc={Pd/k:v for (k,v) in oriDictionary.items() }
         #DictPc is just theoretical Pc values at every single angle, it does not take into account limits such as max input value and so on
+        
+        # check if calculated(wanted) Pc is more than total intensity (Pc +Pd), if True give max power, deg=0
+        # IGNORE LINE-->: cannot use Pd as we need to kmow (somewhat) the definate max power, and Pd does not give us a clue
+        if ( wantedIntensity > Pd/ratio.Pc_to_Pd(motor_angle) +Pd):
+            return 0
+
+        # handle exception where Pd = Pc at 45 deg
         if motor_angle ==45:
+
             # at instant 45 deg, Pc at 0deg would be the max value, max value in this case is power meter reading
             # as at 45 deg all the power goes to the detector, code at the bottom with getpower solves this
-            # zeros = {Pd/ratio.Pc_to_Pd(motor_angle):0.0}
-            zeros = {Pd/ratio.Pc_to_Pd(motor_angle):0.0}
-            print("disjids")
+            zeros = {Pd:0.0}
+
             # use bottom when connected to power meter
             # zeros = {pm.readPower(pm.power_meter):0.0}
+
             DictPc.update(zeros)
+
+            # delete keys which is more than wanted intensity at 45 deg so prog would return 0 and give max power instead
+            for key in list(DictPc.keys()):
+                if key > Pd:
+                    del DictPc[key]
+
+
 
         # elif motor_angle ==0:
             # original power of laser, no way of detecting it as no power goes to the detector
@@ -220,7 +235,11 @@ class difference:
             zeros = {sys.maxsize:0.0}
             DictPc.update(zeros)
 
-        print(DictPc)
+
+        #sort dictionary by key, so at 45 deg {Pd:0} would appear before the others and prog would choose that instead
+        DictPc = OrderedDict(sorted(DictPc.items()))
+
+        # print(DictPc)
 
         # Find the closest value Pc to wanted intensity from Dict, when system is
         # at the specific Pd
@@ -229,13 +248,6 @@ class difference:
 
         if closestVal ==0:
             # print("UUUUUUU")
-            return 0
-
-        # check if calculated(wanted) Pc is more than total intensity (Pc +Pd), if True give max power, deg=0
-        # IGNORE LINE-->: cannot use Pd as we need to kmow (somewhat) the definate max power, and Pd does not give us a clue
-        elif ( wantedIntensity > Pd/ratio.Pc_to_Pd(closestVal) +Pd):
-            # print("UYYYYYY")
-
             return 0
 
 

@@ -42,6 +42,16 @@ def validation():
     else:
         cubeTransmittance= "Please enter the range"
 
+    if (correct_entry_type(desiredPower.value)==True & correct_entry_range_power(float(desiredPower.value))==True)&(correct_entry_type(motorInc.value)==True&correct_entry_range_increment(float(motorInc.value))==True)&(correct_entry_type(HWPTrans.value)==True & correct_entry_range_transmittance(float(HWPTrans.value))==True)&(correct_entry_type(CubeTrans.value)==True & correct_entry_range_transmittance(float(CubeTrans.value))==True):
+        textval = 'Entry validation:\nDesired Output = '+str(outputValue)+'W\n Motor Increment = '+str(motorIncrement)+'\nHalf Wave Plate Transmittance='+str(HWPTransmittance)+'\nCube Transmittance ='+str(cubeTransmittance)
+        ValidationMessage.value=textval
+        desiredPower.clear()
+        motorInc.clear()
+        HWPTrans.clear()
+        CubeTrans.clear()
+
+
+
 #Function that checks if the values is an float
 def correct_entry_type(float_output):
     try:
@@ -88,22 +98,26 @@ blank=Text(app,text="")
 boxIncMessage=Text(app,text="Enter the motor Increment")
 #Textbox where the user enters the desired power
 motorInc=TextBox(app,width=50,height=10)
+motorInc.value=0.2
 
 blank=Text(app,text="")
 
 boxHWPMessage=Text(app,text="Enter the half wave plate transmittance")
 #Textbox where the user enters the desired power
 HWPTrans=TextBox(app,width=50,height=10)
+HWPTrans.value=0.1
 
 blank=Text(app,text="")
 
 boxCubeMessage=Text(app,text="Enter the cube transmittance")
 #Textbox where the user enters the desired power
 CubeTrans=TextBox(app,width=50,height=10)
+CubeTrans.value=0.1
 
 blank=Text(app,text="")
 
 #Button that validates the entry and stores the textbox value as desired output
 validation=PushButton(app,command=validation,text="Validate Entry")
+ValidationMessage=Text(app,text="")
 
 app.display()

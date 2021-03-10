@@ -2,10 +2,10 @@ from guizero import App,Text,TextBox, PushButton
 #-----------------------------------------------------------------------------
 #Constant values
 MIN_VALUE_POWER=0
-MAX_VALUE_POWER=10000
+MAX_VALUE_POWER=1000
 MIN_TRANSMITTANCE=0
 MAX_TRANSMITTANCE=1
-MIN_INCREMENT=0.000001
+MIN_INCREMENT=0.0001
 MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
@@ -41,6 +41,16 @@ def validation():
             cubeTransmittance= "Please enter a value in the range 0-1"
     else:
         cubeTransmittance= "Please enter the range"
+
+    if (correct_entry_type(desiredPower.value)==True & correct_entry_range_power(float(desiredPower.value))==True)&(correct_entry_type(motorInc.value)==True&correct_entry_range_increment(float(motorInc.value))==True)&(correct_entry_type(HWPTrans.value)==True & correct_entry_range_transmittance(float(HWPTrans.value))==True)&(correct_entry_type(CubeTrans.value)==True & correct_entry_range_transmittance(float(CubeTrans.value))==True):
+        textval = 'Entry validation:\nDesired Output = '+str(outputValue)+'W\n Motor Increment = '+str(motorIncrement)+'\nHalf Wave Plate Transmittance='+str(HWPTransmittance)+'\nCube Transmittance ='+str(cubeTransmittance)
+        ValidationMessage.value=textval
+        desiredPower.clear()
+        motorInc.clear()
+        HWPTrans.clear()
+        CubeTrans.clear()
+
+
 
 #Function that checks if the values is an float
 def correct_entry_type(float_output):
@@ -88,22 +98,26 @@ blank=Text(app,text="")
 boxIncMessage=Text(app,text="Enter the motor Increment")
 #Textbox where the user enters the desired power
 motorInc=TextBox(app,width=50,height=10)
+motorInc.value=0.2
 
 blank=Text(app,text="")
 
 boxHWPMessage=Text(app,text="Enter the half wave plate transmittance")
 #Textbox where the user enters the desired power
 HWPTrans=TextBox(app,width=50,height=10)
+HWPTrans.value=0.1
 
 blank=Text(app,text="")
 
 boxCubeMessage=Text(app,text="Enter the cube transmittance")
 #Textbox where the user enters the desired power
 CubeTrans=TextBox(app,width=50,height=10)
+CubeTrans.value=0.1
 
 blank=Text(app,text="")
 
 #Button that validates the entry and stores the textbox value as desired output
 validation=PushButton(app,command=validation,text="Validate Entry")
+ValidationMessage=Text(app,text="")
 
 app.display()

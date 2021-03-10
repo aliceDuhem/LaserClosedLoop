@@ -23,12 +23,12 @@ MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
 #Initialise the values that are being used
-motorIncrement = 0.1
-wantedPower = 0.0085
+motorIncrement = 0.2
+wantedPower = [0.00001,0.00005,0.00008,0.0001,0.00015,0.00016,0.00017,0.00018,0.00019,0.0002,0.0003,0.0004,0.0005,0.00055,0.00056,0.00057,0.00058,0.00059,0.0006,0.0007,0.0008,0.00085,0.00086,0.00087,0.00088,0.00089,0.0009,0.00095,0.001,0.0015,0.002,0.005]
 HWPTransmittance = 0.1
 cubeTransmittance = 0.1
 cubeRefTransmittance=0.5
-current_motor_angle=0
+current_motor_angle=45
 #-----------------------------------------------------------------------------
 
 #Definition of the functions
@@ -62,11 +62,6 @@ def motor_to_initial_power(pm,wantedPower,motorIncrement):
     # Calculates dictionary based of stepper motor increments, transmittance etc.
     oriDictionary = ratio.find_ratioDict(motorIncrement)
 
-    for r,angle in oriDictionary.items():
-        if angle==0.0:
-            del oriDictionary[r]
-            break
-
     #Angle at which the motor needs to be at to achieve the wanted intensity
     additional_angle = difference.neededAngle(current_motor_angle,Pd, wantedPower, oriDictionary)
 
@@ -84,8 +79,8 @@ def createCsvFileData(data):
     date_time = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")   #adds the time to the title to make it unique
     file_extension =  '.csv'    #needs the file extension in the name
     alreadyExists_str = 'second_'
-    fileName = docName+str(wantedPower)+'W_motorInc'+str(motorIncrement)+'_'+date_time+file_extension
-    columns = ['timestamp','power','error'] #determines the 3 columns of the file
+    fileName = docName+'_motorInc'+str(motorIncrement)+'_'+date_time+file_extension
+    columns = ['wanted Power experiment','power at power_meter','angle'] #determines the 3 columns of the file
     separator = ',' #separator between the 3 columns in a row
     format_columns = ['%s','%.6f','%.6f']   #the datatype of the columns
 
@@ -124,58 +119,28 @@ def createCsvFileData(data):
 def formatDateTime(date_time):
     date_time = date_time.strftime("%Y-%b-%d %H:%M:%S") #gives the correct format to the time
 #-----------------------------------------------------------------------------
-
-# # power on the RPi and command initialisation
-
-#initialise power meter
-pm = PowerMeter() #puts an error in the command window if power meter not plugged in
-
-# Rotate to 0
-motor_to_0(pm)
-
-# Put the correct angle and remember the angle_motor
-current_motor_angle=motor_to_initial_power(pm,wantedPower,motorIncrement)
-
-# Make the dictionary (for optical components)
-# TODO: sync variableNames With APP.Py for dictionary creation
-ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
-
-# remove 0 from dict so it can work in difference.neededangle as del does not work inside
-for r,angle in ratio_dict.items():
-    if angle==0.0:
-        del ratio_dict[r]
-        break # Python cannot divide by 0
-
-#Loop:
-    # Reads the value from the power PowerMeter
-
-    # angle at which halfwave plate needs to be at
-#neededAngle = difference.neededAngle(laser_values.current_motor_angle, laser_values.Pd ,laser_values.wantedIntensity, ratio_dict)
-
-    # Find the angle of intended rotation
-    # Send the angle to RPi (with GIPO-0)
-    # Deconstruct the second dictionary --> already done in function
-    # Write values in CSV (or in data array)
-#end of the loop
 data_array=[]
+pm = PowerMeter()
+#current_motor_angle=motor_to_initial_power(pm,pv,motorIncrement)
 
-for i in range(10):
-    inst_power=pm.readPower(pm.power_meter)
-    error= inst_power-wantedPower
-    neededAngle = difference.neededAngle(current_motor_angle, inst_power,wantedPower, ratio_dict)
-    angle_rotation = current_motor_angle-neededAngle
-    a=[datetime.datetime.now(),inst_power,neededAngle]
-    data_array.append(a)
 
-#Optionanl - send back to 0
-motor_to_0(pm)
+for pv in wantedPower:
 
-#Write the values in CSV file for data analysis
+    for i in range(1):
+        inst_power=pm.readPower(pm.power_meter)
+        ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
+        #print(ratio_dict)
+        for r,angle in ratio_dict.items():
+            if angle==0.0:
+                del ratio_dict[r]
+                break
+        #print(ratio_dict)
+        #error= inst_power-pv
+        anglecomputed = difference.neededAngle(current_motor_angle, inst_power,pv,ratio_dict)
+        angle_rotation = current_motor_angle-anglecomputed
+        a=[pv,inst_power,anglecomputed]
+        data_array.append(a)
+    del ratio_dict
+
 createCsvFileData(data_array)
 del data_array
-
-#  destroy main DICTIONARY
-del ratio_dict
-
-#Shut down the guizero when close button pressed
-# Shut RPi

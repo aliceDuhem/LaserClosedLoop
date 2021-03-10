@@ -2,10 +2,10 @@ from guizero import App,Text,TextBox, PushButton
 #-----------------------------------------------------------------------------
 #Constant values
 MIN_VALUE_POWER=0
-MAX_VALUE_POWER=10000
+MAX_VALUE_POWER=1000
 MIN_TRANSMITTANCE=0
 MAX_TRANSMITTANCE=1
-MIN_INCREMENT=0.000001
+MIN_INCREMENT=0.0001
 MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------

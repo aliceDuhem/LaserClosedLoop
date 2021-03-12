@@ -4,9 +4,9 @@ import pyvisa as visa
 import os
 import datetime
 from GetPower import PowerMeter
-from ratioCodes import ratio
-from ratioCodes import difference
-from ratioCodes import absolute
+from ratioCodesv2 import ratiov2 as ratio
+from ratioCodesv2 import differencev2 as difference
+from ratioCodesv2 import absolutev2 as absolute
 from characteristics import Characteristics
 from time import sleep
 import threading
@@ -61,6 +61,7 @@ def motor_to_initial_power(pm,wantedPower,motorIncrement):
 
     # Calculates dictionary based of stepper motor increments, transmittance etc.
     oriDictionary = ratio.find_ratioDict(motorIncrement)
+    del oriDictionary[0]
 
     #Angle at which the motor needs to be at to achieve the wanted intensity
     additional_angle = difference.neededAngle(current_motor_angle,Pd, wantedPower, oriDictionary)
@@ -119,8 +120,11 @@ def createCsvFileData(data):
 def formatDateTime(date_time):
     date_time = date_time.strftime("%Y-%b-%d %H:%M:%S") #gives the correct format to the time
 #-----------------------------------------------------------------------------
+
 data_array=[]
 pm = PowerMeter()
+#motor_to_0(pm)
+max_power=pm.readPower(pm.power_meter)
 #current_motor_angle=motor_to_initial_power(pm,pv,motorIncrement)
 
 
@@ -130,10 +134,11 @@ for pv in wantedPower:
         inst_power=pm.readPower(pm.power_meter)
         ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
         #print(ratio_dict)
-        for r,angle in ratio_dict.items():
+        """for r,angle in ratio_dict.items():
             if angle==0.0:
                 del ratio_dict[r]
-                break
+                break # Python cannot divide by 0"""
+        del ratio_dict[0]
         #print(ratio_dict)
         #error= inst_power-pv
         anglecomputed = difference.neededAngle(current_motor_angle, inst_power,pv,ratio_dict)

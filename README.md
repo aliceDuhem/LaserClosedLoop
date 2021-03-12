@@ -1,4 +1,17 @@
 # LaserClosedLoop
 
-MatlabStuff contains code which complements data in my PDF.
-Simulink system model is within the 'model' file in that directory
+
+### Essential Libraries Needed:
+
+
+
+### Codes needed to run (yet to interlink):
+
+
+
+### Testing Functions:
+
+
+### Matlab commands to test theory:
+
+

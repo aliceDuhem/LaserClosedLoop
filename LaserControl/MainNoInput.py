@@ -25,9 +25,9 @@ MAX_INCREMENT=4
 #Initialise the values that are being used
 motorIncrement = 0.1
 wantedPower = 0.0085
-HWPTransmittance = 0.1
-cubeTransmittance = 0.1
-cubeRefTransmittance=0.5
+HWPTransmittance = 0.95
+cubeTransmittance = 0.95
+cubeRefTransmittance=0.1
 current_motor_angle=0
 #-----------------------------------------------------------------------------
 
@@ -62,10 +62,11 @@ def motor_to_initial_power(pm,wantedPower,motorIncrement):
     # Calculates dictionary based of stepper motor increments, transmittance etc.
     oriDictionary = ratio.find_ratioDict(motorIncrement)
 
-    for r,angle in oriDictionary.items():
-        if angle==0.0:
-            del oriDictionary[r]
-            break
+"""for r,angle in oriDictionary.items():
+    if angle==0.0:
+        del oriDictionary[r]
+        break # Python cannot divide by 0"""
+    del oriDictionary[0]
 
     #Angle at which the motor needs to be at to achieve the wanted intensity
     additional_angle = difference.neededAngle(current_motor_angle,Pd, wantedPower, oriDictionary)
@@ -141,10 +142,11 @@ current_motor_angle=motor_to_initial_power(pm,wantedPower,motorIncrement)
 ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
 
 # remove 0 from dict so it can work in difference.neededangle as del does not work inside
-for r,angle in ratio_dict.items():
+"""for r,angle in ratio_dict.items():
     if angle==0.0:
         del ratio_dict[r]
-        break # Python cannot divide by 0
+        break # Python cannot divide by 0"""
+del ratio_dict[0]
 
 #Loop:
     # Reads the value from the power PowerMeter

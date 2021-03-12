@@ -3,11 +3,11 @@
 
 ### Essential Libraries Needed:
 
-> Ni-Visa
-> Visa
-> Guizero
-> ThorlabsPM100
-> Pyusb
+> Ni-Visa <br />
+> Visa <br />
+> Guizero <br />
+> ThorlabsPM100 <br />
+> Pyusb <br />
 
 
 ### Codes needed to run (yet to interlink):

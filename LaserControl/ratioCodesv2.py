@@ -123,7 +123,7 @@ class ratio:
         motor_angle = math.radians(motor_angle)
 
         #ratio = 4* cube_ref_trans * halfWave_transmittance * pow(math.cos(motor_angle),2) * pow(math.sin(motor_angle),2)
-        ratio = 0.5*cube_ref_trans * halfWave_transmittance * pow(math.sin(4*motor_angle-math.pi/2),2) + (halfWave_transmittance*cube_ref_trans)/2
+        ratio = 0.5*cube_ref_trans * halfWave_transmittance * math.sin(4*motor_angle-math.pi/2) + (halfWave_transmittance*cube_ref_trans)/2
         return Pd*1/ratio
 
 

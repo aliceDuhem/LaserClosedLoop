@@ -1,6 +1,6 @@
 import math
 import sys
-from typing import OrderedDict
+# from typing import OrderedDict
 #from GetPower import PowerMeter
 
 
@@ -112,6 +112,7 @@ class ratio:
         ratio = 0.5*cube_ref_trans * halfWave_transmittance * pow(math.sin(4*motor_angle-math.pi/2),2)+halfWave_transmittance/2
         return ratio
 
+
     def Plaser_from_Pd(Pd, motor_angle, cube_ref_trans=1, halfWave_transmittance =0.95):
 
         #Convert angles to 0<angle<360
@@ -122,7 +123,7 @@ class ratio:
         motor_angle = math.radians(motor_angle)
 
         #ratio = 4* cube_ref_trans * halfWave_transmittance * pow(math.cos(motor_angle),2) * pow(math.sin(motor_angle),2)
-        ratio = 0.5*cube_ref_trans * halfWave_transmittance * pow(math.sin(4*motor_angle-math.pi/2),2)+halfWave_transmittance/2
+        ratio = 0.5*cube_ref_trans * halfWave_transmittance * pow(math.sin(4*motor_angle-math.pi/2),2) + (halfWave_transmittance*cube_ref_trans)/2
         return Pd*1/ratio
 
 
@@ -207,79 +208,21 @@ class difference:
 
     def neededAngle(motor_angle,Pd, motorInc, wantedIntensity,cube_transmittance=0.95, cube_ref_trans=1, halfWave_transmittance =0.95):
 
-        oriDictionary=ratio.find_ratioDict(motorInc,cube_transmittance, cube_ref_trans)
         #scale motor angle
         motor_angle=round(absolute.convAngle(motor_angle),2)
-        # print(Pd/ratio.Pc_to_Pd(motor_angle))
-        #multiply every value in original Dict with Pd to see how Pc varies with motor angle
-        #Find Pc
-        #PcI=ratio.Pc_from_Pd(Pd, motor_angle, cube_transmittance, cube_ref_trans)
+     
         Po=ratio.Plaser_from_Pd(Pd,motor_angle, cube_ref_trans, halfWave_transmittance )
         c=((2*wantedIntensity)/(Po*cube_transmittance*halfWave_transmittance))-1
 
         if c>1:
             c= ((2*wantedIntensity)/(Po*cube_transmittance*halfWave_transmittance))%1
-        #print(c)
-        #print(math.asin(c))
-        #print(math.asin(c)*0.25-math.pi*0.5)
+       
+        angle = math.degrees(((math.asin(c)*0.25-math.pi/8)))
 
-        angle = math.degrees(((math.asin(c)*0.25-math.pi*0.5)))
-
-        #DictPc={Pd/k:v for (k,v) in oriDictionary.items() }
-        #print(DictPc)
-        #DictPc is just theoretical Pc values at every single angle, it does not take into account limits such as max input value and so on
-
-        # check if calculated(wanted) Pc is more than total intensity (Pc +Pd), if True give max power, deg=0
-        # IGNORE LINE-->: cannot use Pd as we need to kmow (somewhat) the definate max power, and Pd does not give us a clue
-        #if ( wantedIntensity > Pd/ratio.Pc_to_Pd(motor_angle) +Pd):
-        #    return 0
-
-        # handle exception where Pd = Pc at 45 deg
-        #if motor_angle ==45:
-
-            # at instant 45 deg, Pc at 0deg would be the max value, max value in this case is power meter reading
-            # as at 45 deg all the power goes to the detector, code at the bottom with getpower solves this
-        #    zeros = {Pd:0.0}
-
-            # use bottom when connected to power meter
-            # zeros = {pm.readPower(pm.power_meter):0.0}
-
-        #    DictPc.update(zeros)
-
-            # delete keys which is more than wanted intensity at 45 deg so prog would return 0 and give max power instead
-        #    for key in list(DictPc.keys()):
-        #        if key > Pd:
-        #            del DictPc[key]
-
-
-
-        # elif motor_angle ==0:
-            # original power of laser, no way of detecting it as no power goes to the detector
-
-        #else:
-            # Must delete 0 before putting dict into function
-            # add zeros as key and val after devision because python cannot deal with 0's
-        #    zeros = {sys.maxsize:0.0}
-        #    DictPc.update(zeros)
-
-
-        #sort dictionary by key, so at 45 deg {Pd:0} would appear before the others and prog would choose that instead
-        #DictPc = OrderedDict(sorted(DictPc.items()))
-
-        # print(DictPc)
-
-        # Find the closest value Pc to wanted intensity from Dict, when system is
-        # at the specific Pd
-        #closestVal = DictPc.get(wantedIntensity, DictPc[min(DictPc.keys(), key=lambda k:abs(k-wantedIntensity))])
-        # print(Pd/ratio.Pc_to_Pd(closestVal) +Pd)
-
-        #if closestVal ==0:
-            # print("UUUUUUU")
-        #    return 0
+        
         if angle%motorInc>0.1:
             closestVal=angle-angle%motorInc+motorInc
         else:
             closestVal=angle-angle%motorInc
 
-        #del DictPc
         return closestVal

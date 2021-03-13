@@ -3,7 +3,7 @@ from ratioCodes import ratio
 from ratioCodes import absolute
 from ratioCodes import difference
 import random
-from general_characteristics import characteristics
+# from general_characteristics import characteristics
 
 
 #TODO: check motor range as dict only goes up to 45 deg. 

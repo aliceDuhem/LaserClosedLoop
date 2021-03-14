@@ -212,22 +212,22 @@ class difference:
         #motor_angle=round(absolute.convAngle(motor_angle),2)
 
         Po=ratio.Plaser_from_Pd(Pd,motor_angle, 1, 0.95 )
+
+        if wantedIntensity >=Po:
+            return 0
+
         cnum=2*wantedIntensity
         cdenum=Po*0.95*0.95
         c=cnum/cdenum
         c=c-1
         print (Po)
         # print (c)
-        if c>1:
-            c= ((2*wantedIntensity)/(Po*cube_transmittance*halfWave_transmittance))%1
+        # if c>1:
+        #     c= ((2*wantedIntensity)/(Po*cube_transmittance*halfWave_transmittance))%1
 
         angle = math.degrees(((math.asin(c)*0.25+math.pi/8)))
         # invert angle graph
         angle=45-angle
 
-        if angle%motorInc>0.1:
-            closestVal=angle-angle%motorInc+motorInc
-        else:
-            closestVal=angle-angle%motorInc
-
+        
         return angle

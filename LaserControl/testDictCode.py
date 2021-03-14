@@ -131,7 +131,7 @@ max_power=pm.readPower(pm.power_meter)
 for pv in wantedPower:
 
     for i in range(1):
-        inst_power=pm.readPower(pm.power_meter)
+        inst_power= =pm.readPower(pm.power_meter)
         ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
         #print(ratio_dict)
         """for r,angle in ratio_dict.items():

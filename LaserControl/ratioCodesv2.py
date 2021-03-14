@@ -221,7 +221,7 @@ class difference:
         if c>1:
             c= ((2*wantedIntensity)/(Po*cube_transmittance*halfWave_transmittance))%1
 
-        angle = math.degrees(((math.asin(c)*0.25-math.pi/8)))
+        angle = math.degrees(((math.asin(c)*0.25+math.pi/8)))
 
 
         if angle%motorInc>0.1:
@@ -229,4 +229,4 @@ class difference:
         else:
             closestVal=angle-angle%motorInc
 
-        return closestVal
+        return angle

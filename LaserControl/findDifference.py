@@ -5,6 +5,7 @@ from ratioCodesv2 import difference
 import random
 import os
 import datetime
+import csv
 
 # from general_characteristics import characteristics
 
@@ -71,7 +72,7 @@ stepperIncrement=1       #motor increment, 0.9,1.8,... deg whatever the motor is
 # laserIntensity = 1.2        #initial laser intensity
 wantedIntensity =0.0009        # required intensity
 Plaser_testVals = [0.00001,0.00005,0.00008,0.0001,0.00015,0.00016,0.00017,0.00018,0.00019,0.0002,0.0003,0.0004,0.0005,0.00055,0.00056,0.00057,0.00058,0.00059,0.0006,0.0007,0.0008,0.00085,0.00086,0.00087,0.00088,0.00089,0.0009,0.00095,0.001,0.0015,0.002,0.005]     # test values for fluctuating originla laser beam
-motor_angle = 0  # current motor angle
+motor_angle = 22 # current motor angle
 Scaled_motor_angle = absolute.convAngle(motor_angle)        # convert current motor angle into 0-45, which is dictionary bounds
 Pd_test = 1.05      # Current Pd laser detector test value
 
@@ -124,12 +125,16 @@ for i in Plaser_testVals:
     print("ratio Pd/Pc,", ratio.Pc_to_Pd(motor_angle))
     print("Current Pc when Pd is the above,", absolute.Pc_from_Pd(i,motor_angle))
     print("Angle needed,",difference.neededAngle(motor_angle,i,stepperIncrement, wantedIntensity))
-    # anglerotation =difference.neededAngle(motor_angle,i,stepperIncrement, wantedIntensity)
-    # a=[i,anglerotation]
-    # data_array.append(a)
+    
+    anglerotation =difference.neededAngle(motor_angle,i,stepperIncrement, wantedIntensity)
+    a=[i,anglerotation, absolute.Pc_from_Pd(i,motor_angle)]
+    data_array.append(a)
     # print("New Pd / Pc ratio,", ratio.Pc_to_Pd(difference.neededAngle(motor_angle,i, stepperIncrement,wantedIntensity)))
 # print(Dict.pop(0.0))
 # print(Dict)
 # createCsvFileData(data_array)
-
+f = open('TestDict_4/Test_Dictionary_motorInc_09_wantedPower_5_2021-Mar-03_23-20-33.csv','w')
+with f:
+    writer = csv.writer(f)
+    writer.writerows(data_array)
 

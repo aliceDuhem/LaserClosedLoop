@@ -211,13 +211,13 @@ class difference:
         #oriDictionary=ratio.find_ratioDict(motorInc,cube_transmittance, cube_ref_trans)
         #motor_angle=round(absolute.convAngle(motor_angle),2)
 
-        Po=ratio.Plaser_from_Pd(Pd,motor_angle, 1, 0.95 )
+        Po=ratio.Plaser_from_Pd(Pd,motor_angle, cube_ref_trans, halfWave_transmittance)
 
-        if wantedIntensity >=Po:
+        if wantedIntensity >=(Po*cube_transmittance*halfWave_transmittance):
             return 0
 
         cnum=2*wantedIntensity
-        cdenum=Po*0.95*0.95
+        cdenum=Po*cube_transmittance*halfWave_transmittance
         c=cnum/cdenum
         c=c-1
         print (Po)
@@ -228,6 +228,10 @@ class difference:
         angle = math.degrees(((math.asin(c)*0.25+math.pi/8)))
         # invert angle graph
         angle=45-angle
+        if angle%motorInc>(motorInc/2):
+            closestVal=angle-angle%motorInc+motorInc
+        else:
+            closestVal=angle-angle%motorInc
 
-        
-        return angle
+
+        return closestVal

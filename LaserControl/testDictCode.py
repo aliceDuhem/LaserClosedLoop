@@ -4,9 +4,9 @@ import pyvisa as visa
 import os
 import datetime
 from GetPower import PowerMeter
-from ratioCodesv2 import ratiov2 as ratio
-from ratioCodesv2 import differencev2 as difference
-from ratioCodesv2 import absolutev2 as absolute
+from ratioCodesv2 import ratio
+from ratioCodesv2 import difference
+from ratioCodesv2 import absolute
 from characteristics import Characteristics
 from time import sleep
 import threading
@@ -23,11 +23,11 @@ MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
 #Initialise the values that are being used
-motorIncrement = 0.2
+motorIncrement = 0.1
 wantedPower = [0.00001,0.00005,0.00008,0.0001,0.00015,0.00016,0.00017,0.00018,0.00019,0.0002,0.0003,0.0004,0.0005,0.00055,0.00056,0.00057,0.00058,0.00059,0.0006,0.0007,0.0008,0.00085,0.00086,0.00087,0.00088,0.00089,0.0009,0.00095,0.001,0.0015,0.002,0.005]
-HWPTransmittance = 0.1
-cubeTransmittance = 0.1
-cubeRefTransmittance=0.5
+HWPTransmittance = 0.95
+cubeTransmittance = 0.95
+cubeRefTransmittance=1
 current_motor_angle=45
 #-----------------------------------------------------------------------------
 
@@ -127,25 +127,26 @@ pm = PowerMeter()
 max_power=pm.readPower(pm.power_meter)
 #current_motor_angle=motor_to_initial_power(pm,pv,motorIncrement)
 
-
-for pv in wantedPower:
-
+pv=0.0005
+for j in range(100):
     for i in range(1):
-        inst_power= =pm.readPower(pm.power_meter)
-        ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
+        inst_power=pm.readPower(pm.power_meter)
+        #ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
         #print(ratio_dict)
         """for r,angle in ratio_dict.items():
             if angle==0.0:
                 del ratio_dict[r]
                 break # Python cannot divide by 0"""
-        del ratio_dict[0]
+        #del ratio_dict[0]
         #print(ratio_dict)
         #error= inst_power-pv
-        anglecomputed = difference.neededAngle(current_motor_angle, inst_power,pv,ratio_dict)
+        #neededAngle(motor_angle,Pd, motorInc, wantedIntensity,cube_transmittance=0.95, cube_ref_trans=1, halfWave_transmittance =0.95)
+        anglecomputed = difference.neededAngle(current_motor_angle, inst_power,motorIncrement,pv,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
         angle_rotation = current_motor_angle-anglecomputed
         a=[pv,inst_power,anglecomputed]
         data_array.append(a)
-    del ratio_dict
+        pv=pv+0.000001
+    #del ratio_dict
 
 createCsvFileData(data_array)
 del data_array

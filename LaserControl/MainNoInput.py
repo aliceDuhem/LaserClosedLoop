@@ -4,9 +4,10 @@ import pyvisa as visa
 import os
 import datetime
 from GetPower import PowerMeter
-from ratioCodes import ratio
-from ratioCodes import difference
-from ratioCodes import absolute
+from ratioCodesv3 import ratio
+from ratioCodesv3 import difference
+from ratioCodesv3 import absolute
+import Motor_Calibration
 from characteristics import Characteristics
 from time import sleep
 import threading
@@ -23,7 +24,7 @@ MAX_INCREMENT=4
 
 #-----------------------------------------------------------------------------
 #Initialise the values that are being used
-motorIncrement = 0.1
+motorIncrement = 0.2
 wantedPower = 0.0085
 HWPTransmittance = 0.95
 cubeTransmittance = 0.95
@@ -132,14 +133,16 @@ def formatDateTime(date_time):
 pm = PowerMeter() #puts an error in the command window if power meter not plugged in
 
 # Rotate to 0
-motor_to_0(pm)
+Motor_Calibration.motor_to_0(pm)
+
+max_power=pm.readPower(pm.power_meter)
 
 # Put the correct angle and remember the angle_motor
-current_motor_angle=motor_to_initial_power(pm,wantedPower,motorIncrement)
+current_motor_angle=Motor_Calibration.motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
 
 # Make the dictionary (for optical components)
 # TODO: sync variableNames With APP.Py for dictionary creation
-ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
+#ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
 
 # remove 0 from dict so it can work in difference.neededangle as del does not work inside
 """for r,angle in ratio_dict.items():
@@ -156,16 +159,15 @@ del ratio_dict[0]
 
     # Find the angle of intended rotation
     # Send the angle to RPi (with GIPO-0)
-    # Deconstruct the second dictionary --> already done in function
     # Write values in CSV (or in data array)
 #end of the loop
 data_array=[]
 
-for i in range(10):
+while 1:
     inst_power=pm.readPower(pm.power_meter)
-    error= inst_power-wantedPower
-    neededAngle = difference.neededAngle(current_motor_angle, inst_power,wantedPower, ratio_dict)
-    angle_rotation = current_motor_angle-neededAngle
+    anglecomputed = difference.neededAngle(current_motor_angle, inst_power,motorIncrement,wantedPower,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
+    angle_rotation = current_motor_angle-anglecomputed
+    current_motor_angle=current_motor_angle+angle_rotation
     a=[datetime.datetime.now(),inst_power,neededAngle]
     data_array.append(a)
 

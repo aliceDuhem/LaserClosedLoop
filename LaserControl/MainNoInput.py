@@ -49,7 +49,7 @@ def motor_to_0(pm):
         #TODO: tell the raspberry Pi to go one step back (which should be max power meter value)
         print("The initialisation is finished")
 
-def motor_to_initial_power(pm,wantedPower,motorIncrement):
+def motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeRefTransmittance,HWPTransmittance):
     # Set up the power meter and Dictionnary
     #---------------------------------------------------------------------------
     #the time the signal takes to go from the code to the RPi
@@ -57,25 +57,15 @@ def motor_to_initial_power(pm,wantedPower,motorIncrement):
     # current motor angle, after calibration
     current_motor_angle = 0
 
-    Pd = pm.readPower(pm.power_meter)
-    #Pd=1;
-
-    # Calculates dictionary based of stepper motor increments, transmittance etc.
-    oriDictionary = ratio.find_ratioDict(motorIncrement)
-
-"""for r,angle in oriDictionary.items():
-    if angle==0.0:
-        del oriDictionary[r]
-        break # Python cannot divide by 0"""
-    del oriDictionary[0]
-
+    inst_power = pm.readPower();
+    
     #Angle at which the motor needs to be at to achieve the wanted intensity
-    additional_angle = difference.neededAngle(current_motor_angle,Pd, wantedPower, oriDictionary)
+    additional_angle = difference.neededAngle(current_motor_angle, inst_power,motorIncrement,wantedPower,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
 
     #The new angle is the previous one + the angle by which the motor turns
-    current_motor_angle=current_motor_angle+additional_angle;
-    return current_motor_angle
+    current_motor_angle=current_motor_angle+additional_angle
     #TODO: enter the function that sends the code to the Rpi
+    return current_motor_angle
 
 #Create a class to write in the csv file all the data
 #The columns will give the intensity and the error
@@ -140,16 +130,6 @@ max_power=pm.readPower(pm.power_meter)
 # Put the correct angle and remember the angle_motor
 current_motor_angle=Motor_Calibration.motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
 
-# Make the dictionary (for optical components)
-# TODO: sync variableNames With APP.Py for dictionary creation
-#ratio_dict = ratio.find_ratioDict(motorIncrement,cubeTransmittance,cubeRefTransmittance)
-
-# remove 0 from dict so it can work in difference.neededangle as del does not work inside
-"""for r,angle in ratio_dict.items():
-    if angle==0.0:
-        del ratio_dict[r]
-        break # Python cannot divide by 0"""
-del ratio_dict[0]
 
 #Loop:
     # Reads the value from the power PowerMeter
@@ -172,14 +152,12 @@ while 1:
     data_array.append(a)
 
 #Optionanl - send back to 0
-motor_to_0(pm)
+#motor_to_0(pm)
 
 #Write the values in CSV file for data analysis
 createCsvFileData(data_array)
 del data_array
 
-#  destroy main DICTIONARY
-del ratio_dict
 
 #Shut down the guizero when close button pressed
 # Shut RPi

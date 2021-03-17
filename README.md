@@ -30,15 +30,18 @@ LaserControl<br />
 ### Testing Functions:
 
 LaserControl<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- SaveDataCsv (Function to write output array into csv for analysis) <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- testDictCode (Tests dictionary to verify its theoretical functionality) <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- TestDictionaryWithPowerMeter (Tests interlinkage between dictionary and power meter) <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- findDifference (Tests mathematical rigour of dictionary codes) <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />
+&nbsp;&nbsp;&nbsp; Tests <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   | <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- SaveDataCsv (Function to write output array into csv for analysis) <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- testDictCode (Tests dictionary to verify its theoretical functionality) <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- TestDictionaryWithPowerMeter (Tests interlinkage between dictionary and power meter) <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |-- findDifference (Tests mathematical rigour of dictionary codes) <br />
 
 ### Matlab commands to test theory:
 

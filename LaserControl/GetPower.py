@@ -37,8 +37,8 @@ class PowerMeter:
 
 #Tests and how to use the code
 
-power = PowerMeter()
-print(power.readPower(power.power_meter))
+#power = PowerMeter()
+#print(power.readPower(power.power_meter))
 
 
 # These are commands, methods of the class

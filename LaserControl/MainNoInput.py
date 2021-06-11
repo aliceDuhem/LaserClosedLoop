@@ -7,8 +7,7 @@ from GetPower import PowerMeter
 from ratioCodesv3 import ratio
 from ratioCodesv3 import difference
 from ratioCodesv3 import absolute
-import Motor_Calibration
-from characteristics import Characteristics
+import MotorCalibration
 from time import sleep
 import threading
 
@@ -58,7 +57,7 @@ def motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeR
     current_motor_angle = 0
 
     inst_power = pm.readPower();
-    
+
     #Angle at which the motor needs to be at to achieve the wanted intensity
     additional_angle = difference.neededAngle(current_motor_angle, inst_power,motorIncrement,wantedPower,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
 
@@ -128,7 +127,7 @@ Motor_Calibration.motor_to_0(pm)
 max_power=pm.readPower(pm.power_meter)
 
 # Put the correct angle and remember the angle_motor
-current_motor_angle=Motor_Calibration.motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
+current_motor_angle=MotorCalibration.motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeRefTransmittance,HWPTransmittance)
 
 
 #Loop:

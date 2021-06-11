@@ -9,6 +9,9 @@ from MotorCalibration import Calibration
 from threading import Thread
 from time import sleep
 from GetPower import PowerMeter
+from RatioFinal import difference
+from RatioFinal import absolute
+from RatioFinal import ratio
 
 #-------------------------------------------------------------------------------
 #Define all the constants
@@ -44,6 +47,10 @@ class Application(tk.Frame):
         self.motorIncrement=0.2
         self.HWPTransmittance=0.1
         self.cubeTransmittance=0.1
+        self.cubeRefTransmittance=1
+        self.currentMotorAngle=0
+
+        #TODO: Create a connection with the RPi or arduino
 
 
 
@@ -115,7 +122,11 @@ class Application(tk.Frame):
         pm = PowerMeter()
 
         #Set the motor to 0
-        Motor_Calibration.motor_to_0(pm)
+        Calibration.motor_to_0(pm)
+        self.currentMotorAngle=0
+
+        #Set the motor to the wanted Power
+        self.currentMotorAngle=Calibration.motor_to_initial_power(pm,self.outputValue,self.motorIncrement,self.cubeTransmittance,self.cubeRefTransmittance,self.HWPTransmittance)
 
 
     def start_thread(self):
@@ -130,22 +141,39 @@ class Application(tk.Frame):
         #Add the control loop of the system and send the info to a RPi
         print('activate_system called')
         print(self.thread_status)
+        data_array=[]
 
         while self.thread_status:
-            print("active\n")
+            print("active")
             sleep(1)
             #code
 
+
         #1. Create the power meter and get the power
+            pm = PowerMeter()
+
         #2. Do the computation using the class
+            instPower=pm.readPower(pm.power_meter)
+            angleComputed = difference.neededAngle(self.currentMotorAngle, instPower,self.motorIncrement,self.outputValue,self.cubeTransmittance,self.cubeRefTransmittance,self.HWPTransmittance)
+            angleRotation = self.currentMotorAngle-angleComputed
+            self.currentMotorAngle=self.currentMotorAngle+angleRotation
+            a=[datetime.datetime.now(),instPower,angleComputed]
+            data_array.append(a)
+
         #3. Send to the RPi the information using the connection class
 
+    #Write the values in CSV file for data analysis
+        createCsvFileData(data_array)
+        del data_array
 
     def stop_thread(self):
         #Stop the operation of the control loop
         self.thread_status=False
         print("Process stopped")
 
+#IGNORE CODE BELOW, DATA ANALYSIS AND CHECKING
+#*******************************************************************************
+#*******************************************************************************
     #Check data Entry
     #-----------------------------------------------------------------------------
     def validation(self):
@@ -228,7 +256,56 @@ class Application(tk.Frame):
             return False
     #---------------------------------------------------------------------------
 
+    #Create a class to write in the csv file all the data
+    #The columns will give the intensity and the error
+    def createCsvFileData(data):
 
+
+        docName = 'power_readings_' #beginning name document
+        date_time = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")   #adds the time to the title to make it unique
+        file_extension =  '.csv'    #needs the file extension in the name
+        alreadyExists_str = 'second_'
+        fileName = docName+str(wantedPower)+'W_motorInc'+str(motorIncrement)+'_'+date_time+file_extension
+        columns = ['timestamp','power','error'] #determines the 3 columns of the file
+        separator = ',' #separator between the 3 columns in a row
+        format_columns = ['%s','%.6f','%.6f']   #the datatype of the columns
+
+        #makes sure that the headings and the columns are of the same dimensions
+        if len(data[0]) != len(columns):
+            print ("The dimensions of the columns and headings are not equal")
+            return
+
+        #check if the file exists if needed in order not to overwrite
+        if(os.path.exists(fileName)):
+            print("The file already exists")
+            fileName=docName+alreadyExists_str+date_time+file_extension
+
+        #Specifies the path mode as writing 'w'
+        file = open(fileName, 'w')
+
+        #Writes an header/description of the document: time the measures started
+        line = 'Intensity recordings for experiment starting at '+ str(data[0][0]) +'. readings every '+ str(data[1][0]-data[0][0]) + ' seconds\n'
+        file.write(line)
+
+        #each case of columns is separates on a line by a comma (separator),
+        #concatenated and added to the file
+        #line is a template for the format
+        line = separator.join(columns)
+        file.write('%s\n' % line)
+
+        #for each new row in the data, give the correct type format
+        format = separator.join(format_columns)
+        for row in data:
+            line= format % tuple(row)
+            file.write('%s\n' % line)
+
+        #close the file
+        file.close()
+
+    def formatDateTime(date_time):
+        date_time = date_time.strftime("%Y-%b-%d %H:%M:%S") #gives the correct format to the time
+#*******************************************************************************
+#*******************************************************************************
 
 
 root = tk.Tk()

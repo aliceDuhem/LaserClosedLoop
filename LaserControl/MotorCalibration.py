@@ -10,6 +10,9 @@
 import os
 from time import sleep
 from GetPower import PowerMeter
+from RatioFinal import difference
+from RatioFinal import absolute
+from RatioFinal import ratio
 
 class Calibration:
 

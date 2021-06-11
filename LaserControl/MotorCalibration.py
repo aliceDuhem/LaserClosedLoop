@@ -11,19 +11,20 @@ import os
 from time import sleep
 from GetPower import PowerMeter
 
-class Motor_Calibration:
+class Calibration:
 
     def motor_to_0(pm):
         pd_max_value=0
+        #TODO: Compute reaction time RPi
         reaction_time_Rpi = 10
 
         while (pm.readPower()>pd_max_value):
             #The power does not change when we read it as the plate has rotated already
             pd_max_value=pm.readPower()
             #TODO: give to the raspberry Pi an angle to rotate from, take from function
+            #ROTATE BY 1 STEP
             #Wait until the RPi has changed the angle of the half wave plate
             sleep(reaction_time_Rpi)
-            #test
         else:
             #TODO: tell the raspberry Pi to go one step back (which should be max power meter value)
             print("The initialisation is finished")
@@ -76,4 +77,4 @@ class Motor_Calibration:
 
         return pd_max_value
 
-    motor_calibration_array([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 11.3, 10.5])
+    #motor_calibration_array([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 11.3, 10.5])

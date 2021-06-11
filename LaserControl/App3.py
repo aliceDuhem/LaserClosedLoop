@@ -5,9 +5,10 @@
 import tkinter as tk
 import tkinter.messagebox
 import threading
+from MotorCalibration import Calibration
 from threading import Thread
 from time import sleep
-#from GetPower import PowerMeter
+from GetPower import PowerMeter
 
 #-------------------------------------------------------------------------------
 #Define all the constants
@@ -108,7 +109,14 @@ class Application(tk.Frame):
     #Add the definitions of the functions
     def initialise_motor(self):
         print("initialise_motor() called")
-        #Add the code to initialise the motor
+
+        #Code to initialise the motor
+        #1. create a power meter instance
+        pm = PowerMeter()
+
+        #Set the motor to 0
+        Motor_Calibration.motor_to_0(pm)
+
 
     def start_thread(self):
         print('start_thread() called')
@@ -127,6 +135,10 @@ class Application(tk.Frame):
             print("active\n")
             sleep(1)
             #code
+
+        #1. Create the power meter and get the power
+        #2. Do the computation using the class
+        #3. Send to the RPi the information using the connection class
 
 
     def stop_thread(self):

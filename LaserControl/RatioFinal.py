@@ -52,10 +52,11 @@ class difference:
         cnum=2*wantedIntensity
         cdenum=Po*cube_transmittance*halfWave_transmittance
         c=cnum/cdenum
-        c=c-1
+        c=c-(1/cube_transmittance)
 
-        angle = math.degrees(((math.asin(c)*0.25+math.pi/8)))
-        # invert angle graph
+        angle = math.degrees(((math.asin(c)*0.25-math.pi/8)))
+        
+        # invert angle graph (might change 45 to 90 if not working as it repeats every 45 to 90 deg, i'm still unsure)
         angle=45-angle
         if angle%motorInc>(motorInc/2):
             closestVal=angle-angle%motorInc+motorInc

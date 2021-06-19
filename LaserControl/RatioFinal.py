@@ -13,7 +13,7 @@ class ratio:
         motor_angle = math.radians(motor_angle)
 
         #ratio = 4* cube_ref_trans * halfWave_transmittance * pow(math.cos(motor_angle),2) * pow(math.sin(motor_angle),2)
-        ratio = 0.5*cube_ref_trans * halfWave_transmittance * math.sin(4*motor_angle-math.pi/2) + (halfWave_transmittance*cube_ref_trans)/2
+        ratio = 0.5*cube_ref_trans * halfWave_transmittance * math.sin(4*motor_angle-math.pi/2) + (halfWave_transmittance)/2
         return Pd*1/ratio
 
 
@@ -55,7 +55,7 @@ class difference:
         c=c-(1/cube_transmittance)
 
         angle = math.degrees(((math.asin(c)*0.25-math.pi/8)))
-        
+
         # invert angle graph (might change 45 to 90 if not working as it repeats every 45 to 90 deg, i'm still unsure)
         angle=45-angle
         if angle%motorInc>(motorInc/2):

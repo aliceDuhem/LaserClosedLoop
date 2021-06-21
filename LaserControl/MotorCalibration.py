@@ -13,35 +13,40 @@ from GetPower import PowerMeter
 from RatioFinal import difference
 from RatioFinal import absolute
 from RatioFinal import ratio
+#Connection with the Raspberry Pi
+from ConnectionR import Connect
 
 class Calibration:
 
     def motor_to_0(pm):
         pd_max_value=0
         #TODO: Compute reaction time RPi
-        reaction_time_Rpi = 10
+        reaction_time_Rpi = 0.1
+        rpi=Connect()
 
         while (pm.readPower()>pd_max_value):
             #The power does not change when we read it as the plate has rotated already
             pd_max_value=pm.readPower()
             #TODO: give to the raspberry Pi an angle to rotate from, take from function
             #ROTATE BY 1 STEP
+            """rpi.sendPacket(1)"""
             #Wait until the RPi has changed the angle of the half wave plate
             sleep(reaction_time_Rpi)
         else:
             #TODO: tell the raspberry Pi to go one step back (which should be max power meter value)
+            """rpi.sendPacket(-1)"""
             print("The initialisation is finished")
 
     def motor_to_initial_power(pm,wantedPower,motorIncrement,cubeTransmittance,cubeRefTransmittance,HWPTransmittance):
-        # Set up the power meter and Dictionnary
+        # Decided to use directly the Equation in the code
+        #Set up the power meter and formula
         #---------------------------------------------------------------------------
         #the time the signal takes to go from the code to the RPi
-        reaction_time_Rpi = 10
+        reaction_time_Rpi = 0.1
         # current motor angle, after calibration
         current_motor_angle = 0
 
-        #inst_power = pm.readPower();
-        inst_power=1;
+        inst_power = pm.readPower();
 
         # Calculates dictionary based of stepper motor increments, transmittance etc.
         #oriDictionary = ratio.find_ratioDict(motorIncrement)

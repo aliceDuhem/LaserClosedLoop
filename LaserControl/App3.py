@@ -5,14 +5,18 @@
 import tkinter as tk
 import tkinter.messagebox
 import threading
-from MotorCalibration import Calibration
 from threading import Thread
 from time import sleep
+#Reads the Power from the power meter
 from GetPower import PowerMeter
+#Computed the angles
 from RatioFinal import difference
 from RatioFinal import absolute
 from RatioFinal import ratio
-
+#Calibrates the motor
+from MotorCalibration import Calibration
+#Connection with the Raspberry Pi
+from ConnectionR import Connect
 #-------------------------------------------------------------------------------
 #Define all the constants
 MIN_VALUE_POWER=0
@@ -32,7 +36,7 @@ class Application(tk.Frame):
         #Gives a name to the window
         master.title('Laser Intensity Regulator Application')
         # Width height of the window
-        master.geometry("500x400")
+        master.geometry("500x500")
         # Create widgets/grid, where the components are going to be put
         self.create_widgets()
         # Init selected item var
@@ -42,12 +46,12 @@ class Application(tk.Frame):
         #Are the elements in the entries correct?
         self.no_error = False
 
-        #Values for the experiement
+        #Main Values for the experiement
         self.outputValue=0
-        self.motorIncrement=0.2
-        self.HWPTransmittance=0.1
-        self.cubeTransmittance=0.1
-        self.cubeRefTransmittance=1
+        self.motorIncrement=0.18
+        self.HWPTransmittance=0.9
+        self.cubeTransmittance=0.9
+        self.cubeRefTransmittance=0.95
         self.currentMotorAngle=0
 
         #TODO: Create a connection with the RPi or arduino
@@ -81,7 +85,7 @@ class Application(tk.Frame):
 
         # Half wave plate transmittance
         self.hwpt_text = tk.StringVar()
-        self.hwpt_text.set("0.1")
+        self.hwpt_text.set("0.9")
         self.hwpt_label = tk.Label(
             self.master, text='Half Wave plate Transmittance', pady=20, padx=10, font=('bold', 14))
         self.hwpt_label.grid(row=5, column=0)
@@ -91,13 +95,23 @@ class Application(tk.Frame):
 
         # Cube Transmittance
         self.cubet_text = tk.StringVar()
-        self.cubet_text.set("0.1")
+        self.cubet_text.set("0.9")
         self.cubet_label = tk.Label(
             self.master, text='Cube Transmittance', pady=20, padx=10, font=('bold', 14))
         self.cubet_label.grid(row=7, column=0)
         self.cubet_entry = tk.Entry(
             self.master, textvariable=self.cubet_text, justify='center')
         self.cubet_entry.grid(row=8, column=0)
+
+        # Cube Ref Transmittance
+        self.cubert_text = tk.StringVar()
+        self.cubert_text.set("0.95")
+        self.cubert_label = tk.Label(
+            self.master, text='Cube Reflection Transmittance', pady=20, padx=10, font=('bold', 14))
+        self.cubert_label.grid(row=9, column=0)
+        self.cubert_entry = tk.Entry(
+            self.master, textvariable=self.cubert_text, justify='center')
+        self.cubert_entry.grid(row=10, column=0)
 
         #(Re-)Validation Button
         self.validation_button=tk.Button(self.master, text="Initialise", command=self.initialise_motor,font=('bold', 14), pady=10, height=1, width=15)
@@ -115,6 +129,7 @@ class Application(tk.Frame):
 
     #Add the definitions of the functions
     def initialise_motor(self):
+        cal=Calibration()
         print("initialise_motor() called")
 
         #Code to initialise the motor
@@ -122,11 +137,11 @@ class Application(tk.Frame):
         pm = PowerMeter()
 
         #Set the motor to 0
-        Calibration.motor_to_0(pm)
+        cal.motor_to_0(pm)
         self.currentMotorAngle=0
 
         #Set the motor to the wanted Power
-        self.currentMotorAngle=Calibration.motor_to_initial_power(pm,self.outputValue,self.motorIncrement,self.cubeTransmittance,self.cubeRefTransmittance,self.HWPTransmittance)
+        #self.currentMotorAngle=Calibration.motor_to_initial_power(pm,self.outputValue,self.motorIncrement,self.cubeTransmittance,self.cubeRefTransmittance,self.HWPTransmittance)
 
 
     def start_thread(self):
@@ -156,11 +171,14 @@ class Application(tk.Frame):
             instPower=pm.readPower(pm.power_meter)
             angleComputed = difference.neededAngle(self.currentMotorAngle, instPower,self.motorIncrement,self.outputValue,self.cubeTransmittance,self.cubeRefTransmittance,self.HWPTransmittance)
             angleRotation = self.currentMotorAngle-angleComputed
+            steps= angleRotation/self.motorIncrement
             self.currentMotorAngle=self.currentMotorAngle+angleRotation
             a=[datetime.datetime.now(),instPower,angleComputed]
             data_array.append(a)
 
         #3. Send to the RPi the information using the connection class
+            rpi=Connect()
+            """rpi.sendPacket(steps)"""
 
     #Write the values in CSV file for data analysis
         createCsvFileData(data_array)
@@ -179,7 +197,7 @@ class Application(tk.Frame):
     def validation(self):
         if self.correct_entry_type(self.laser_power_text.get())==True:  #self.laser_power_text.get(): to get the value inside the textbox, .get() function required
             if self.correct_entry_range_power(self.laser_power_text.get())==True:
-                outputValue=float(self.laser_power_text.get())
+                self.outputValue=float(self.laser_power_text.get())
             else:
                 print("Please enter a number for Laser power")
                 tkinter.messagebox.showwarning(title="Laser Power Error", message="Please enter a correct Laser power in the range 0-10000")
@@ -191,7 +209,7 @@ class Application(tk.Frame):
 
         if self.correct_entry_type(self.motor_inc_text.get())==True:
             if self.correct_entry_range_increment(self.motor_inc_text.get())==True:
-                motorIncrement=float(self.motor_inc_text.get())
+                self.motorIncrement=float(self.motor_inc_text.get())
             else:
                 tkinter.messagebox.showwarning(title="Motor Increment Error", message="Please enter a Motor Increment in the range 0.0001-4")
                 self.no_error = False
@@ -201,7 +219,7 @@ class Application(tk.Frame):
 
         if self.correct_entry_type(self.hwpt_text.get())==True:
             if self.correct_entry_range_transmittance(self.hwpt_text.get())==True:
-                HWPTransmittance=float(self.hwpt_text.get())
+                self.HWPTransmittance=float(self.hwpt_text.get())
             else:
                 tkinter.messagebox.showwarning(title="Half Wave Plate Transmittance", message="Please enter a Half Wave Plate Transmittance in the range 0-1")
                 self.no_error = False
@@ -211,7 +229,7 @@ class Application(tk.Frame):
 
         if self.correct_entry_type(self.cubet_text.get())==True:
             if self.correct_entry_range_transmittance(self.cubet_text.get())==True:
-                cubeTransmittance=float(self.cubet_text.get())
+                self.cubeTransmittance=float(self.cubet_text.get())
             else:
                 tkinter.messagebox.showwarning(title="Cube Transmittance", message="Please enter a Cube Transmittance in the range 0-1")
                 self.no_error = False
@@ -219,8 +237,18 @@ class Application(tk.Frame):
             tkinter.messagebox.showwarning(title="Cube Transmittance", message="Please enter a correct Cube Transmittance")
             self.no_error = False
 
+        if self.correct_entry_type(self.cubert_text.get())==True:
+            if self.correct_entry_range_transmittance(self.cubert_text.get())==True:
+                self.cubeRefTransmittance=float(self.cubert_text.get())
+            else:
+                tkinter.messagebox.showwarning(title="Reflected Cube Transmittance", message="Please enter a Reflected Cube Transmittance in the range 0-1")
+                self.no_error = False
+        else:
+            tkinter.messagebox.showwarning(title="Reflected Cube Transmittance", message="Please enter a correct Reflected Cube Transmittance")
+            self.no_error = False
+
         if (self.correct_entry_type(self.laser_power_text.get())==True & self.correct_entry_range_power(self.laser_power_text.get())==True)&(self.correct_entry_type(self.motor_inc_text.get())==True&self.correct_entry_range_increment(self.motor_inc_text.get())==True)&(self.correct_entry_type(self.hwpt_text.get())==True & self.correct_entry_range_transmittance(self.hwpt_text.get())==True)&(self.correct_entry_type(self.cubet_text.get())==True & self.correct_entry_range_transmittance(self.cubet_text.get())==True):
-            textval = 'Entry validation:\nDesired Output = '+str(outputValue)+'W\n Motor Increment = '+str(motorIncrement)+'\nHalf Wave Plate Transmittance='+str(HWPTransmittance)+'\nCube Transmittance ='+str(cubeTransmittance)
+            textval = 'Entry validation:\nDesired Output = '+str(self.outputValue)+'W\n Motor Increment = '+str(self.motorIncrement)+'\nHalf Wave Plate Transmittance='+str(self.HWPTransmittance)+'\nCube Transmittance ='+str(self.cubeTransmittance)
             print(textval)
             self.no_error = True
 

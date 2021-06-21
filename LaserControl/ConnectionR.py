@@ -1,6 +1,8 @@
 import socket
 import os
 
+#EXAMPLE of connection to the Raspberry PI
+
 class Connect:
 
     def __init__(self):
